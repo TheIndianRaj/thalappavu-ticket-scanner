@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no"
   >
 
-  <title>Ticket Scanner</title>
+  <meta name="theme-color" content="#087ff5">
 
-  <!-- QR scanner library -->
+  <title>Event Ticket Scanner</title>
+
+  <!-- QR scanner -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 
+
   <style>
+
+    /* =====================================================
+       GLOBAL
+       ===================================================== */
 
     * {
       box-sizing: border-box;
@@ -32,8 +44,15 @@
         Roboto,
         Arial,
         sans-serif;
-      background: #f4f6f8;
-      color: #202124;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f4f7fb 0%,
+          #eef2f6 100%
+        );
+
+      color: #17191c;
     }
 
     body {
@@ -46,14 +65,23 @@
     }
 
     button {
-      border: 0;
       cursor: pointer;
       touch-action: manipulation;
     }
 
+
+    /* =====================================================
+       PAGE
+       ===================================================== */
+
     .page {
       min-height: 100vh;
-      padding: 24px 16px 40px;
+
+      padding:
+        22px
+        16px
+        40px;
+
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -61,138 +89,396 @@
 
     .container {
       width: 100%;
-      max-width: 680px;
+      max-width: 620px;
     }
+
+
+    /* =====================================================
+       CARD
+       ===================================================== */
 
     .card {
       background: #ffffff;
-      border-radius: 28px;
-      padding: 32px 28px;
+
+      border-radius: 30px;
+
+      padding:
+        34px
+        28px;
+
       box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.08);
+        0 10px 35px rgba(
+          0,
+          0,
+          0,
+          0.08
+        );
     }
 
-    /* -----------------------------------------
+
+    /* =====================================================
+       BRAND
+       ===================================================== */
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #087ff5,
+          #0066d6
+        );
+
+      color: white;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 25px;
+      font-weight: 700;
+
+      box-shadow:
+        0 6px 16px
+        rgba(
+          8,
+          127,
+          245,
+          0.25
+        );
+    }
+
+    .brand-text {
+      font-size: 16px;
+      font-weight: 700;
+
+      color: #687078;
+
+      letter-spacing: 0.4px;
+    }
+
+
+    /* =====================================================
        HEADINGS
-       ----------------------------------------- */
+       ===================================================== */
 
     h1 {
       margin: 0 0 12px;
+
       font-size: 42px;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
+      line-height: 1.08;
+
+      letter-spacing: -1.6px;
     }
 
     h2 {
-      margin: 10px 0;
+      margin: 0;
+
       font-size: 28px;
       line-height: 1.2;
     }
 
-    p {
-      line-height: 1.5;
-    }
-
     .subtitle {
-      margin: 0 0 30px;
-      color: #6b6f75;
-      font-size: 20px;
-      line-height: 1.5;
+      margin:
+        0
+        0
+        34px;
+
+      font-size: 19px;
+      line-height: 1.55;
+
+      color: #6c737b;
     }
 
-    /* -----------------------------------------
-       READY STATUS
-       ----------------------------------------- */
 
-    .ready {
-      color: #07883b;
-      font-size: 27px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    /* =====================================================
+       FORM
+       ===================================================== */
+
+    .form-group {
+      margin-bottom: 22px;
     }
 
-    .ready::first-letter {
-      font-size: 24px;
-    }
+    .label {
+      display: block;
 
-    .scanner-info {
-      color: #6b6f75;
-      font-size: 18px;
-      margin: 0 0 28px;
-    }
+      margin-bottom: 9px;
 
-    /* -----------------------------------------
-       BUTTONS
-       ----------------------------------------- */
-
-    .primary-button {
-      width: 100%;
-      min-height: 64px;
-      padding: 16px 20px;
-      border-radius: 18px;
-      background: #087ff5;
-      color: white;
-      font-size: 21px;
-      font-weight: 700;
-      transition:
-        transform 0.1s ease,
-        background 0.2s ease;
-    }
-
-    .primary-button:active {
-      transform: scale(0.98);
-      background: #066bd0;
-    }
-
-    .secondary-button {
-      width: 100%;
-      min-height: 60px;
-      padding: 14px 20px;
-      border-radius: 18px;
-      background: #eeeeee;
-      color: #202124;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .secondary-button:active {
-      transform: scale(0.98);
-    }
-
-    .danger-button {
-      width: 100%;
-      min-height: 58px;
-      padding: 14px 20px;
-      border-radius: 18px;
-      background: #eeeeee;
-      color: #333333;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    /* -----------------------------------------
-       CAMERA HELP
-       ----------------------------------------- */
-
-    .permission-box {
-      margin-top: 24px;
-      padding: 20px;
-      border-radius: 18px;
-      background: #eef5ff;
-      border: 1px solid #cfe1ff;
-    }
-
-    .permission-title {
-      color: #0759a5;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .permission-box p {
-      margin: 6px 0;
-      color: #64686d;
       font-size: 17px;
+      font-weight: 700;
+
+      color: #24272b;
+    }
+
+    .input {
+      width: 100%;
+
+      min-height: 62px;
+
+      padding:
+        14px
+        17px;
+
+      border:
+        1px solid
+        #cdd2d8;
+
+      border-radius: 17px;
+
+      background: #fff;
+
+      font-size: 19px;
+
+      outline: none;
+
+      transition:
+        border-color .2s,
+        box-shadow .2s;
+    }
+
+    .input:focus {
+      border-color: #087ff5;
+
+      box-shadow:
+        0 0 0 4px
+        rgba(
+          8,
+          127,
+          245,
+          0.12
+        );
+    }
+
+
+    /* =====================================================
+       PRIMARY BUTTON
+       ===================================================== */
+
+    .primary {
+      width: 100%;
+
+      min-height: 64px;
+
+      padding:
+        14px
+        20px;
+
+      border: none;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #087ff5,
+          #066fe0
+        );
+
+      color: white;
+
+      font-size: 20px;
+      font-weight: 750;
+
+      box-shadow:
+        0 7px 18px
+        rgba(
+          8,
+          127,
+          245,
+          0.23
+        );
+
+      transition:
+        transform .1s,
+        opacity .2s;
+    }
+
+    .primary:active {
+      transform: scale(.985);
+    }
+
+    .primary:disabled {
+      opacity: .55;
+      cursor: default;
+    }
+
+
+    /* =====================================================
+       SECONDARY
+       ===================================================== */
+
+    .secondary {
+      width: 100%;
+
+      min-height: 58px;
+
+      padding:
+        13px
+        18px;
+
+      border: none;
+
+      border-radius: 17px;
+
+      background: #eeeeef;
+
+      color: #292c30;
+
+      font-size: 18px;
+      font-weight: 650;
+    }
+
+
+    /* =====================================================
+       INFORMATION BOX
+       ===================================================== */
+
+    .info-box {
+      margin-top: 25px;
+
+      padding: 19px;
+
+      border-radius: 18px;
+
+      background: #f0f6ff;
+
+      border:
+        1px solid
+        #d3e4fb;
+    }
+
+    .info-title {
+      color: #075da8;
+
+      font-size: 17px;
+      font-weight: 750;
+
+      margin-bottom: 7px;
+    }
+
+    .info-text {
+      margin: 0;
+
+      color: #68727d;
+
+      font-size: 15px;
+
+      line-height: 1.55;
+    }
+
+
+    /* =====================================================
+       MESSAGE
+       ===================================================== */
+
+    .message {
+      min-height: 25px;
+
+      margin-top: 18px;
+
+      color: #6b7075;
+
+      font-size: 16px;
+
+      line-height: 1.45;
+    }
+
+    .message.error {
+      color: #c62828;
+    }
+
+    .message.success {
+      color: #087f3d;
+    }
+
+
+    /* =====================================================
+       READY SCREEN
+       ===================================================== */
+
+    .ready-status {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      margin-bottom: 8px;
+
+      color: #07883b;
+
+      font-size: 21px;
+      font-weight: 750;
+    }
+
+    .ready-dot {
+      width: 11px;
+      height: 11px;
+
+      border-radius: 50%;
+
+      background: #08a44f;
+    }
+
+    .scanner-details {
+      color: #70777e;
+
+      font-size: 17px;
+
+      margin:
+        0
+        0
+        27px;
+    }
+
+
+    /* =====================================================
+       CAMERA HELP
+       ===================================================== */
+
+    .camera-help {
+      margin-top: 23px;
+
+      padding: 18px;
+
+      border-radius: 18px;
+
+      background: #f0f6ff;
+
+      border:
+        1px solid
+        #d4e4fa;
+    }
+
+    .camera-help-title {
+      color: #075da8;
+
+      font-size: 18px;
+      font-weight: 750;
+
+      margin-bottom: 5px;
+    }
+
+    .camera-help p {
+      margin: 0;
+
+      color: #69727b;
+
+      font-size: 15px;
+
+      line-height: 1.5;
     }
 
     details {
@@ -201,95 +487,58 @@
 
     summary {
       color: #0875d1;
-      font-size: 18px;
-      font-weight: 600;
+
+      font-weight: 650;
+
+      font-size: 16px;
+
       cursor: pointer;
-      padding: 6px 0;
     }
 
-    .permission-steps {
-      margin-top: 14px;
-      padding-left: 22px;
-      color: #555;
-      font-size: 16px;
+    .permission-list {
+      margin:
+        12px
+        0
+        0
+        20px;
+
+      padding: 0;
+
+      color: #5d646c;
+
+      font-size: 15px;
+
       line-height: 1.6;
     }
 
-    /* -----------------------------------------
-       REGISTRATION
-       ----------------------------------------- */
 
-    .form-group {
-      margin-bottom: 22px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 9px;
-    }
-
-    .input {
-      width: 100%;
-      min-height: 58px;
-      padding: 14px 16px;
-      border: 1px solid #c9cdd2;
-      border-radius: 15px;
-      outline: none;
-      font-size: 18px;
-      color: #202124;
-      background: #fff;
-    }
-
-    .input:focus {
-      border-color: #087ff5;
-      box-shadow: 0 0 0 3px rgba(8, 127, 245, 0.12);
-    }
-
-    .registration-note {
-      margin-top: 18px;
-      color: #70757a;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    /* -----------------------------------------
+    /* =====================================================
        SCANNER
-       ----------------------------------------- */
-
-    .scanner-card {
-      padding: 26px 20px 24px;
-    }
-
-    .scanner-header {
-      padding: 4px 4px 18px;
-    }
-
-    .scanner-header h1 {
-      font-size: 36px;
-    }
+       ===================================================== */
 
     #qr-reader {
       width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
+
       overflow: hidden;
-      border-radius: 20px;
-      background: #111;
+
+      border-radius: 22px;
+
+      background: #101010;
     }
 
     #qr-reader video {
       width: 100% !important;
+
       height: auto !important;
-      border-radius: 20px;
+
       display: block;
+
+      border-radius: 22px;
     }
 
-    /*
-      html5-qrcode can create its own UI.
-      We hide unnecessary text/buttons generated by it.
-    */
+    #qr-reader__dashboard {
+      display: none !important;
+    }
 
     #qr-reader__dashboard_section_csr {
       display: none !important;
@@ -299,203 +548,202 @@
       display: none !important;
     }
 
-    #qr-reader__scan_region {
-      min-height: 280px;
-    }
-
-    .scanner-help {
+    .scanner-instruction {
       text-align: center;
-      margin: 18px 0;
-      color: #666;
+
+      color: #697078;
+
       font-size: 17px;
+
+      margin:
+        18px
+        0;
     }
 
-    /* -----------------------------------------
-       CHECKING
-       ----------------------------------------- */
 
-    .checking-card {
+    /* =====================================================
+       LOADING
+       ===================================================== */
+
+    .loading-card {
       text-align: center;
-      padding: 60px 25px;
+
+      padding:
+        70px
+        25px;
     }
 
     .spinner {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 25px;
-      border: 7px solid #e0e0e0;
-      border-top-color: #087ff5;
+      width: 62px;
+      height: 62px;
+
+      margin:
+        0
+        auto
+        25px;
+
+      border:
+        7px solid
+        #e3e6e9;
+
+      border-top-color:
+        #087ff5;
+
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+
+      animation:
+        spin .8s linear infinite;
     }
 
     @keyframes spin {
+
       to {
-        transform: rotate(360deg);
+        transform:
+          rotate(360deg);
       }
+
     }
 
-    .checking-card h2 {
-      font-size: 25px;
-    }
 
-    .checking-card p {
-      color: #70757a;
-      font-size: 17px;
-    }
+    /* =====================================================
+       RESULT
+       ===================================================== */
 
-    /* -----------------------------------------
-       RESULT CARDS
-       ----------------------------------------- */
-
-    .result-card {
+    .result {
       text-align: center;
-      border-top: 10px solid;
-      padding-top: 35px;
+
+      padding-top: 20px;
+
+      border-top:
+        9px solid;
     }
 
-    .result-valid {
-      border-color: #0a9f4b;
+    .result.valid {
+      border-color: #08a44f;
     }
 
-    .result-invalid {
-      border-color: #e11d2e;
+    .result.invalid {
+      border-color: #e21d2d;
     }
 
-    .result-error {
-      border-color: #f39c12;
+    .result.error {
+      border-color: #ed9c00;
     }
 
     .result-icon {
-      font-size: 68px;
-      font-weight: 700;
+      font-size: 62px;
+
       line-height: 1;
-      margin-bottom: 15px;
-    }
 
-    .result-valid .result-icon {
-      color: #0a9f4b;
-    }
-
-    .result-invalid .result-icon {
-      color: #e11d2e;
-    }
-
-    .result-error .result-icon {
-      color: #f39c12;
-    }
-
-    .result-title {
-      font-size: 34px;
-      font-weight: 800;
-      margin-bottom: 25px;
-    }
-
-    .result-valid .result-title {
-      color: #087f3d;
-    }
-
-    .result-invalid .result-title {
-      color: #d7192e;
-    }
-
-    .result-error .result-title {
-      color: #d98900;
-    }
-
-    .ticket-id {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin: 18px 0 28px;
-      word-break: break-word;
-    }
-
-    .entry-status {
-      font-size: 28px;
-      font-weight: 800;
       margin-bottom: 12px;
     }
 
-    .result-message {
-      color: #6b6f75;
-      font-size: 19px;
-      margin: 0 0 30px;
+    .result.valid .result-icon {
+      color: #08a44f;
     }
 
-    /* -----------------------------------------
-       SMALL TEXT
-       ----------------------------------------- */
-
-    .small {
-      color: #70757a;
-      font-size: 15px;
-      line-height: 1.5;
+    .result.invalid .result-icon {
+      color: #e21d2d;
     }
 
-    .error-message {
-      color: #666;
-      font-size: 17px;
-      line-height: 1.5;
+    .result.error .result-icon {
+      color: #ed9c00;
+    }
+
+    .result-title {
+      font-size: 33px;
+
+      font-weight: 800;
+
+      margin-bottom: 25px;
+    }
+
+    .result.valid .result-title {
+      color: #087f3d;
+    }
+
+    .result.invalid .result-title {
+      color: #d7192e;
+    }
+
+    .result.error .result-title {
+      color: #d88a00;
+    }
+
+    .ticket-id {
+      font-size: 21px;
+
+      font-weight: 750;
+
       word-break: break-word;
-      margin: 20px 0 28px;
+
+      margin:
+        15px
+        0
+        25px;
     }
 
-    /* -----------------------------------------
-       SPACING
-       ----------------------------------------- */
+    .entry {
+      font-size: 26px;
 
-    .button-gap {
-      margin-top: 14px;
+      font-weight: 800;
+
+      margin-bottom: 10px;
     }
 
-    .top-gap {
-      margin-top: 25px;
+    .result-message {
+      color: #6b7177;
+
+      font-size: 18px;
+
+      line-height: 1.5;
+
+      margin:
+        0
+        0
+        28px;
     }
 
-    /* -----------------------------------------
+
+    /* =====================================================
        MOBILE
-       ----------------------------------------- */
+       ===================================================== */
 
     @media (max-width: 600px) {
 
       .page {
-        padding: 14px 10px 30px;
+        padding:
+          14px
+          10px
+          30px;
       }
 
       .card {
-        padding: 28px 20px;
-        border-radius: 24px;
+        padding:
+          28px
+          20px;
+
+        border-radius: 25px;
       }
 
       h1 {
-        font-size: 38px;
+        font-size: 39px;
       }
 
       .subtitle {
         font-size: 18px;
       }
 
-      .primary-button {
-        min-height: 62px;
-        font-size: 20px;
+      .brand {
+        margin-bottom: 22px;
       }
 
-      .result-title {
-        font-size: 31px;
-      }
-
-      .entry-status {
-        font-size: 25px;
-      }
-
-      #qr-reader__scan_region {
-        min-height: 250px;
-      }
     }
 
   </style>
+
 </head>
+
 
 <body>
 
@@ -509,110 +757,106 @@
    ============================================================
 
    IMPORTANT:
-
-   Put your STABLE Apps Script API/Web App URL here.
+   Put your STABLE Apps Script /exec URL here.
 
    Example:
 
-   https://script.google.com/macros/s/XXXXXXXXXXXX/exec
-
-   Your printed QR codes should NOT contain this URL.
-
-   They should contain only the Ticket ID or a deployment-
-   independent ticket validation URL.
+   https://script.google.com/macros/s/XXXXXXXX/exec
 
    ============================================================ */
 
 const CONFIG = {
 
   API_URL:
-    "https://script.google.com/macros/s/AKfycbyTVy6vn2zxI8Aeqm5uLGmdf5wY34Js-I_Zpfa1XxgZaluVDXgExmHk6evCM798Ap-w/exec",
+    "PASTE_YOUR_STABLE_APPS_SCRIPT_EXEC_URL_HERE",
 
-  CAMERA_START_DELAY: 400,
+  VALIDATION_TIMEOUT:
+    15000,
 
-  VALIDATION_TIMEOUT: 15000
+  CAMERA_DELAY:
+    500
 
 };
 
 
 /* ============================================================
-   APPLICATION STATE
+   STATE
    ============================================================ */
 
 let scanner = null;
 
 let scannerRunning = false;
 
+let cameraStarting = false;
+
 let scanInProgress = false;
 
 let validationInProgress = false;
 
-let cameraStarting = false;
-
-let currentStream = null;
-
 
 /* ============================================================
-   LOCAL STORAGE
+   STORAGE
    ============================================================ */
 
-const STORAGE_KEYS = {
+const STORAGE = {
 
-  scannerId: "ticket_scanner_id",
+  registered:
+    "ticket_scanner_registered",
 
-  scannerName: "ticket_scanner_name",
+  scannerId:
+    "ticket_scanner_id",
 
-  registered: "ticket_scanner_registered"
+  scannerName:
+    "ticket_scanner_name"
 
 };
 
 
 /* ============================================================
-   APP INITIALIZATION
+   START
    ============================================================ */
 
 document.addEventListener(
   "DOMContentLoaded",
-  function() {
-
-    initializeApp();
-
-  }
+  initialize
 );
 
 
-function initializeApp() {
+function initialize() {
 
   if (
-    CONFIG.API_URL.includes("PASTE_YOUR") ||
-    !CONFIG.API_URL
+    !CONFIG.API_URL ||
+    CONFIG.API_URL.includes("PASTE_YOUR")
   ) {
 
-    showConfigurationError();
+    showConfigError();
 
     return;
+
   }
+
 
   const registered =
     localStorage.getItem(
-      STORAGE_KEYS.registered
+      STORAGE.registered
     );
 
   const scannerId =
     localStorage.getItem(
-      STORAGE_KEYS.scannerId
+      STORAGE.scannerId
     );
+
 
   if (
     registered === "true" &&
     scannerId
   ) {
 
-    showReadyScreen();
+    showReady();
 
   } else {
 
-    showRegistrationScreen();
+    showRegistration();
 
   }
 
@@ -623,9 +867,9 @@ function initializeApp() {
    REGISTRATION SCREEN
    ============================================================ */
 
-function showRegistrationScreen() {
+function showRegistration() {
 
-  stopAndDestroyScanner();
+  cleanupScanner();
 
   document.getElementById("app").innerHTML = `
 
@@ -635,17 +879,35 @@ function showRegistrationScreen() {
 
         <div class="card">
 
-          <h1>Register Scanner</h1>
+          <div class="brand">
+
+            <div class="brand-icon">
+              ✓
+            </div>
+
+            <div class="brand-text">
+              EVENT TICKET SYSTEM
+            </div>
+
+          </div>
+
+
+          <h1>
+            Register Scanner
+          </h1>
+
 
           <p class="subtitle">
-            Register this phone as an
-            authorized event scanner.
+            Register this phone once.
+            It can then be used to validate
+            tickets at the event entrance.
           </p>
+
 
           <div class="form-group">
 
             <label
-              class="form-label"
+              class="label"
               for="scannerName">
 
               Scanner name
@@ -662,10 +924,11 @@ function showRegistrationScreen() {
 
           </div>
 
+
           <div class="form-group">
 
             <label
-              class="form-label"
+              class="label"
               for="registrationCode">
 
               Registration code
@@ -676,24 +939,41 @@ function showRegistrationScreen() {
               id="registrationCode"
               class="input"
               type="password"
-              placeholder="Registration code"
+              placeholder="Enter registration code"
               autocomplete="off"
             >
 
           </div>
 
+
           <button
             id="registerButton"
-            class="primary-button"
+            class="primary"
             onclick="registerScanner()">
 
             REGISTER THIS PHONE
 
           </button>
 
+
           <div
             id="registrationMessage"
-            class="registration-note">
+            class="message">
+          </div>
+
+
+          <div class="info-box">
+
+            <div class="info-title">
+              🔐 Authorized device
+            </div>
+
+            <p class="info-text">
+              Only registered scanner phones
+              can validate event tickets.
+              Keep this device secure.
+            </p>
+
           </div>
 
         </div>
@@ -708,44 +988,55 @@ function showRegistrationScreen() {
 
 
 /* ============================================================
-   REGISTER PHONE
+   REGISTER
    ============================================================ */
 
 async function registerScanner() {
 
-  const nameElement =
-    document.getElementById("scannerName");
+  const name =
+    document
+      .getElementById("scannerName")
+      .value
+      .trim();
 
-  const codeElement =
-    document.getElementById("registrationCode");
+  const code =
+    document
+      .getElementById("registrationCode")
+      .value
+      .trim();
+
 
   const button =
-    document.getElementById("registerButton");
+    document.getElementById(
+      "registerButton"
+    );
 
   const message =
-    document.getElementById("registrationMessage");
-
-  const scannerName =
-    nameElement.value.trim();
-
-  const registrationCode =
-    codeElement.value.trim();
+    document.getElementById(
+      "registrationMessage"
+    );
 
 
-  if (!scannerName) {
+  if (!name) {
 
-    message.textContent =
-      "Please enter a scanner name.";
+    showMessage(
+      message,
+      "Please enter a scanner name.",
+      true
+    );
 
     return;
 
   }
 
 
-  if (!registrationCode) {
+  if (!code) {
 
-    message.textContent =
-      "Please enter the registration code.";
+    showMessage(
+      message,
+      "Please enter the registration code.",
+      true
+    );
 
     return;
 
@@ -757,61 +1048,117 @@ async function registerScanner() {
   button.textContent =
     "REGISTERING...";
 
-  message.textContent =
-    "Registering this phone...";
+  showMessage(
+    message,
+    "Connecting to ticket server...",
+    false
+  );
 
 
   try {
 
-    const result =
-      await callApi(
+    /*
+     * IMPORTANT:
+     *
+     * We first try registerScanner.
+     *
+     * If the existing Apps Script uses
+     * register instead, we automatically
+     * try that too.
+     */
+
+    let result =
+      await apiRequest(
         "registerScanner",
         {
-          scannerName:
-            scannerName,
-
-          registrationCode:
-            registrationCode
+          scannerName: name,
+          registrationCode: code
         }
       );
 
 
+    /*
+     * Compatibility fallback.
+     *
+     * This handles older versions of
+     * your Apps Script backend.
+     */
+
     if (
-      result &&
-      result.success
+      isUnknownAction(result)
+    ) {
+
+      console.log(
+        "registerScanner not supported. Trying register..."
+      );
+
+
+      result =
+        await apiRequest(
+          "register",
+          {
+            scannerName: name,
+            registrationCode: code
+          }
+        );
+
+    }
+
+
+    console.log(
+      "Registration response:",
+      result
+    );
+
+
+    if (
+      !result
+    ) {
+
+      throw new Error(
+        "No response received from the server."
+      );
+
+    }
+
+
+    if (
+      result.success === true ||
+      result.status === "REGISTERED"
     ) {
 
       const scannerId =
         result.scannerId ||
-        result.deviceId;
+        result.deviceId ||
+        result.id;
 
 
       if (!scannerId) {
 
         throw new Error(
-          "The server did not return a scanner ID."
+          "Registration succeeded but the server did not return a scanner ID."
         );
 
       }
 
 
       localStorage.setItem(
-        STORAGE_KEYS.scannerId,
+        STORAGE.registered,
+        "true"
+      );
+
+      localStorage.setItem(
+        STORAGE.scannerId,
         scannerId
       );
 
       localStorage.setItem(
-        STORAGE_KEYS.scannerName,
-        scannerName
-      );
-
-      localStorage.setItem(
-        STORAGE_KEYS.registered,
-        "true"
+        STORAGE.scannerName,
+        name
       );
 
 
-      showReadyScreen();
+      showReady();
 
       return;
 
@@ -819,10 +1166,9 @@ async function registerScanner() {
 
 
     throw new Error(
-      result &&
-      result.message
-        ? result.message
-        : "Registration failed."
+      result.message ||
+      result.error ||
+      "Registration was rejected."
     );
 
 
@@ -833,14 +1179,20 @@ async function registerScanner() {
       error
     );
 
-    message.textContent =
-      error.message ||
-      "Registration failed.";
 
     button.disabled = false;
 
     button.textContent =
       "REGISTER THIS PHONE";
+
+
+    showMessage(
+      message,
+      friendlyError(
+        error
+      ),
+      true
+    );
 
   }
 
@@ -851,19 +1203,21 @@ async function registerScanner() {
    READY SCREEN
    ============================================================ */
 
-function showReadyScreen() {
+function showReady() {
 
-  stopAndDestroyScanner();
+  cleanupScanner();
 
-  const scannerName =
+
+  const name =
     localStorage.getItem(
-      STORAGE_KEYS.scannerName
+      STORAGE.scannerName
     ) ||
     "Event Scanner";
 
-  const scannerId =
+
+  const id =
     localStorage.getItem(
-      STORAGE_KEYS.scannerId
+      STORAGE.scannerId
     ) ||
     "";
 
@@ -876,34 +1230,44 @@ function showReadyScreen() {
 
         <div class="card">
 
-          <div class="ready">
-            ● READY
+          <div class="ready-status">
+
+            <span class="ready-dot"></span>
+
+            READY
+
           </div>
+
 
           <h1>
             Ticket Scanner
           </h1>
 
-          <p class="scanner-info">
-            ${escapeHtml(scannerName)}
-            ${scannerId
-              ? " • " + escapeHtml(scannerId)
+
+          <p class="scanner-details">
+
+            ${escapeHtml(name)}
+
+            ${id
+              ? " • " +
+                escapeHtml(id)
               : ""}
+
           </p>
 
 
           <button
-            class="primary-button"
+            class="primary"
             onclick="startScanner()">
 
-            📷 SCAN TICKET
+            📷 &nbsp; SCAN TICKET
 
           </button>
 
 
-          <div class="permission-box">
+          <div class="camera-help">
 
-            <div class="permission-title">
+            <div class="camera-help-title">
               📷 Camera permission
             </div>
 
@@ -912,13 +1276,15 @@ function showReadyScreen() {
               to scan tickets.
             </p>
 
+
             <details>
 
               <summary>
                 How to allow camera access
               </summary>
 
-              <ol class="permission-steps">
+
+              <ol class="permission-list">
 
                 <li>
                   Tap the site settings icon
@@ -926,7 +1292,7 @@ function showReadyScreen() {
                 </li>
 
                 <li>
-                  Open
+                  Select
                   <strong>Permissions</strong>.
                 </li>
 
@@ -941,7 +1307,7 @@ function showReadyScreen() {
                 </li>
 
                 <li>
-                  Return to this page and tap
+                  Return here and tap
                   <strong>SCAN TICKET</strong>.
                 </li>
 
@@ -952,10 +1318,10 @@ function showReadyScreen() {
           </div>
 
 
-          <div class="top-gap">
+          <div style="margin-top:20px;">
 
             <button
-              class="danger-button"
+              class="secondary"
               onclick="unregisterScanner()">
 
               Unregister this scanner
@@ -976,27 +1342,15 @@ function showReadyScreen() {
 
 
 /* ============================================================
-   START SCANNER
+   START CAMERA
    ============================================================ */
 
 async function startScanner() {
 
-  if (scannerRunning || cameraStarting) {
-
-    console.log(
-      "Scanner already running."
-    );
-
-    return;
-
-  }
-
-
-  if (scanInProgress) {
-
-    console.log(
-      "Scan already in progress."
-    );
+  if (
+    cameraStarting ||
+    scannerRunning
+  ) {
 
     return;
 
@@ -1009,28 +1363,17 @@ async function startScanner() {
 
 
   /*
-   * VERY IMPORTANT:
-   *
-   * Destroy the previous scanner before
-   * creating another one.
-   *
-   * This fixes the Android second-scan
-   * problem.
+   * Always destroy previous scanner.
    */
 
-  await stopAndDestroyScanner();
+  await cleanupScanner();
 
 
-  renderScannerScreen();
+  renderScanner();
 
-
-  /*
-   * Give the browser time to create
-   * the #qr-reader element.
-   */
 
   await sleep(
-    CONFIG.CAMERA_START_DELAY
+    CONFIG.CAMERA_DELAY
   );
 
 
@@ -1042,39 +1385,40 @@ async function startScanner() {
       );
 
 
-    /*
-     * Start a completely fresh camera.
-     */
-
     await scanner.start(
 
       {
-        facingMode: "environment"
+        facingMode:
+          "environment"
       },
 
       {
 
         fps: 10,
 
-        qrbox: function(
-          viewfinderWidth,
-          viewfinderHeight
-        ) {
+        qrbox:
+          function(
+            width,
+            height
+          ) {
 
-          const size =
-            Math.min(
-              viewfinderWidth,
-              viewfinderHeight
-            ) * 0.70;
+            const size =
+              Math.floor(
+                Math.min(
+                  width,
+                  height
+                ) * 0.70
+              );
 
-          return {
-            width: Math.floor(size),
-            height: Math.floor(size)
-          };
+            return {
 
-        },
+              width: size,
 
-        aspectRatio: 1.0,
+              height: size
+
+            };
+
+          },
 
         disableFlip: false
 
@@ -1082,22 +1426,18 @@ async function startScanner() {
 
       function(decodedText) {
 
-        handleQrDetected(
+        handleQr(
           decodedText
         );
 
       },
 
-      function(errorMessage) {
+      function() {
 
         /*
-         * This is normal.
-         *
-         * html5-qrcode reports a scan
-         * failure every time it doesn't
-         * find a QR code in a frame.
-         *
-         * Do not display these errors.
+         * Ignore normal
+         * "QR not found"
+         * messages.
          */
 
       }
@@ -1109,17 +1449,14 @@ async function startScanner() {
 
     cameraStarting = false;
 
-    console.log(
-      "Camera started successfully."
-    );
-
 
   } catch (error) {
 
     console.error(
-      "Camera start failed:",
+      "Camera error:",
       error
     );
+
 
     scannerRunning = false;
 
@@ -1127,7 +1464,9 @@ async function startScanner() {
 
     scanInProgress = false;
 
-    await stopAndDestroyScanner();
+
+    await cleanupScanner();
+
 
     showCameraError(
       error
@@ -1139,17 +1478,12 @@ async function startScanner() {
 
 
 /* ============================================================
-   QR DETECTED
+   QR FOUND
    ============================================================ */
 
-async function handleQrDetected(
-  decodedText
+async function handleQr(
+  value
 ) {
-
-  /*
-   * Prevent the same QR code from
-   * triggering multiple times.
-   */
 
   if (
     validationInProgress ||
@@ -1166,268 +1500,24 @@ async function handleQrDetected(
   scanInProgress = false;
 
 
-  const ticketValue =
-    String(decodedText || "")
-      .trim();
-
-
-  console.log(
-    "QR detected:",
-    ticketValue
-  );
+  const ticketId =
+    String(
+      value || ""
+    ).trim();
 
 
   /*
-   * STOP CAMERA IMMEDIATELY.
+   * Immediately stop camera.
    */
 
-  await stopAndDestroyScanner();
+  await cleanupScanner();
 
 
-  /*
-   * Now validate.
-   */
-
-  await validateTicket(
-    ticketValue
-  );
-
-}
-
-
-/* ============================================================
-   STOP + DESTROY CAMERA
-   ============================================================ */
-
-async function stopAndDestroyScanner() {
-
-  scannerRunning = false;
-
-
-  if (!scanner) {
-
-    /*
-     * Also stop any camera tracks
-     * that may still exist.
-     */
-
-    stopMediaTracks();
-
-    return;
-
-  }
-
-
-  try {
-
-    if (
-      scanner.isScanning
-    ) {
-
-      await scanner.stop();
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "Scanner stop:",
-      error
-    );
-
-  }
-
-
-  try {
-
-    await scanner.clear();
-
-  } catch (error) {
-
-    console.warn(
-      "Scanner clear:",
-      error
-    );
-
-  }
-
-
-  scanner = null;
-
-
-  stopMediaTracks();
-
-
-  /*
-   * Android Chrome sometimes needs
-   * a short delay before releasing
-   * the camera completely.
-   */
-
-  await sleep(250);
-
-}
-
-
-/* ============================================================
-   STOP MEDIA STREAMS
-   ============================================================ */
-
-function stopMediaTracks() {
-
-  try {
-
-    if (currentStream) {
-
-      currentStream
-        .getTracks()
-        .forEach(
-          function(track) {
-
-            track.stop();
-
-          }
-        );
-
-      currentStream = null;
-
-    }
-
-
-    const videos =
-      document.querySelectorAll(
-        "#qr-reader video"
-      );
-
-
-    videos.forEach(
-      function(video) {
-
-        if (
-          video.srcObject
-        ) {
-
-          const stream =
-            video.srcObject;
-
-          stream
-            .getTracks()
-            .forEach(
-              function(track) {
-
-                track.stop();
-
-              }
-            );
-
-          video.srcObject = null;
-
-        }
-
-      }
-    );
-
-  } catch (error) {
-
-    console.warn(
-      "Media cleanup:",
-      error
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   SCANNER SCREEN
-   ============================================================ */
-
-function renderScannerScreen() {
-
-  document.getElementById("app").innerHTML = `
-
-    <div class="page">
-
-      <div class="container">
-
-        <div class="card scanner-card">
-
-          <div class="scanner-header">
-
-            <h1>
-              Scan Ticket
-            </h1>
-
-            <p class="subtitle">
-              Point the camera at the QR code
-              printed on the ticket.
-            </p>
-
-          </div>
-
-
-          <div id="qr-reader"></div>
-
-
-          <p class="scanner-help">
-            Point the camera at the QR code.
-          </p>
-
-
-          <button
-            class="secondary-button"
-            onclick="cancelScan()">
-
-            CANCEL
-
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ============================================================
-   CANCEL SCAN
-   ============================================================ */
-
-async function cancelScan() {
-
-  validationInProgress = false;
-
-  scanInProgress = false;
-
-  cameraStarting = false;
-
-
-  await stopAndDestroyScanner();
-
-
-  showReadyScreen();
-
-}
-
-
-/* ============================================================
-   VALIDATE TICKET
-   ============================================================ */
-
-async function validateTicket(
-  ticketValue
-) {
-
-  if (!ticketValue) {
+  if (!ticketId) {
 
     validationInProgress = false;
 
-    showSystemError(
+    showError(
       "The QR code does not contain a ticket ID."
     );
 
@@ -1436,65 +1526,103 @@ async function validateTicket(
   }
 
 
-  showCheckingScreen();
+  validateTicket(
+    ticketId
+  );
+
+}
+
+
+/* ============================================================
+   VALIDATE
+   ============================================================ */
+
+async function validateTicket(
+  ticketId
+) {
+
+  showChecking();
 
 
   try {
 
-    const result =
-      await callApiWithTimeout(
+    let result =
+      await apiRequestWithTimeout(
         "validateTicket",
         {
 
           ticketId:
-            ticketValue,
+            ticketId,
 
           scannerId:
             localStorage.getItem(
-              STORAGE_KEYS.scannerId
+              STORAGE.scannerId
             ),
 
           scannerName:
             localStorage.getItem(
-              STORAGE_KEYS.scannerName
+              STORAGE.scannerName
             )
 
         },
 
         CONFIG.VALIDATION_TIMEOUT
-
       );
 
 
-    console.log(
-      "Validation response:",
-      result
-    );
+    /*
+     * Compatibility fallback for
+     * older backend action names.
+     */
+
+    if (
+      isUnknownAction(result)
+    ) {
+
+      result =
+        await apiRequestWithTimeout(
+          "validate",
+          {
+
+            ticketId:
+              ticketId,
+
+            scannerId:
+              localStorage.getItem(
+                STORAGE.scannerId
+              ),
+
+            scannerName:
+              localStorage.getItem(
+                STORAGE.scannerName
+              )
+
+          },
+
+          CONFIG.VALIDATION_TIMEOUT
+        );
+
+    }
 
 
     validationInProgress = false;
 
 
-    handleValidationResult(
+    processValidation(
       result,
-      ticketValue
+      ticketId
     );
 
 
   } catch (error) {
 
-    console.error(
-      "Validation failed:",
-      error
-    );
-
-
     validationInProgress = false;
 
 
-    showSystemError(
-      error.message ||
-      "Unable to validate the ticket."
+    showError(
+      friendlyError(
+        error
+      )
     );
 
   }
@@ -1503,17 +1631,17 @@ async function validateTicket(
 
 
 /* ============================================================
-   HANDLE VALIDATION RESULT
+   PROCESS VALIDATION
    ============================================================ */
 
-function handleValidationResult(
+function processValidation(
   result,
-  ticketValue
+  ticketId
 ) {
 
   if (!result) {
 
-    showSystemError(
+    showError(
       "The server returned no response."
     );
 
@@ -1522,32 +1650,40 @@ function handleValidationResult(
   }
 
 
-  /*
-   * Support several common response formats.
-   */
+  console.log(
+    "Validation result:",
+    result
+  );
+
 
   const status =
     String(
       result.status ||
       result.result ||
       ""
-    )
-      .toUpperCase();
+    ).toUpperCase();
 
 
-  const ticketId =
-    result.ticketId ||
-    result.ticketID ||
-    ticketValue;
+  const valid =
+    result.valid === true;
+
+
+  const used =
+    result.alreadyUsed === true ||
+    result.used === true ||
+    status === "ALREADY_USED" ||
+    status === "USED";
 
 
   if (
+    valid ||
     status === "VALID" ||
     status === "AVAILABLE" ||
     status === "SUCCESS"
   ) {
 
-    showValidTicket(
+    showValid(
+      result.ticketId ||
       ticketId,
       result.message
     );
@@ -1557,12 +1693,10 @@ function handleValidationResult(
   }
 
 
-  if (
-    status === "ALREADY_USED" ||
-    status === "USED"
-  ) {
+  if (used) {
 
-    showAlreadyUsed(
+    showUsed(
+      result.ticketId ||
       ticketId,
       result.message
     );
@@ -1574,68 +1708,24 @@ function handleValidationResult(
 
   if (
     status === "INVALID" ||
-    status === "NOT_FOUND"
-  ) {
-
-    showInvalidTicket(
-      ticketId,
-      result.message
-    );
-
-    return;
-
-  }
-
-
-  /*
-   * Some Apps Script implementations
-   * return { valid: true/false }.
-   */
-
-  if (
-    result.valid === true
-  ) {
-
-    showValidTicket(
-      ticketId,
-      result.message
-    );
-
-    return;
-
-  }
-
-
-  if (
+    status === "NOT_FOUND" ||
     result.valid === false
   ) {
 
-    if (
-      result.alreadyUsed ||
-      result.used
-    ) {
-
-      showAlreadyUsed(
-        ticketId,
-        result.message
-      );
-
-    } else {
-
-      showInvalidTicket(
-        ticketId,
-        result.message
-      );
-
-    }
+    showInvalid(
+      result.ticketId ||
+      ticketId,
+      result.message
+    );
 
     return;
 
   }
 
 
-  showSystemError(
+  showError(
     result.message ||
+    result.error ||
     "Unexpected response from the ticket server."
   );
 
@@ -1643,10 +1733,10 @@ function handleValidationResult(
 
 
 /* ============================================================
-   VALID TICKET
+   VALID
    ============================================================ */
 
-function showValidTicket(
+function showValid(
   ticketId,
   message
 ) {
@@ -1657,7 +1747,7 @@ function showValidTicket(
 
       <div class="container">
 
-        <div class="card result-card result-valid">
+        <div class="card result valid">
 
           <div class="result-icon">
             ✓
@@ -1671,7 +1761,7 @@ function showValidTicket(
             ${escapeHtml(ticketId)}
           </div>
 
-          <div class="entry-status">
+          <div class="entry">
             ENTRY ALLOWED
           </div>
 
@@ -1679,14 +1769,13 @@ function showValidTicket(
             ${
               escapeHtml(
                 message ||
-                "This ticket is valid."
+                "This ticket is valid and has been accepted."
               )
             }
           </p>
 
           <button
-            id="nextTicketButton"
-            class="primary-button"
+            class="primary"
             onclick="scanNextTicket()">
 
             SCAN NEXT TICKET
@@ -1705,10 +1794,10 @@ function showValidTicket(
 
 
 /* ============================================================
-   ALREADY USED
+   USED
    ============================================================ */
 
-function showAlreadyUsed(
+function showUsed(
   ticketId,
   message
 ) {
@@ -1719,7 +1808,7 @@ function showAlreadyUsed(
 
       <div class="container">
 
-        <div class="card result-card result-invalid">
+        <div class="card result invalid">
 
           <div class="result-icon">
             ×
@@ -1733,7 +1822,7 @@ function showAlreadyUsed(
             ${escapeHtml(ticketId)}
           </div>
 
-          <div class="entry-status">
+          <div class="entry">
             ENTRY DENIED
           </div>
 
@@ -1747,7 +1836,7 @@ function showAlreadyUsed(
           </p>
 
           <button
-            class="primary-button"
+            class="primary"
             onclick="scanNextTicket()">
 
             SCAN NEXT TICKET
@@ -1766,10 +1855,10 @@ function showAlreadyUsed(
 
 
 /* ============================================================
-   INVALID TICKET
+   INVALID
    ============================================================ */
 
-function showInvalidTicket(
+function showInvalid(
   ticketId,
   message
 ) {
@@ -1780,7 +1869,7 @@ function showInvalidTicket(
 
       <div class="container">
 
-        <div class="card result-card result-invalid">
+        <div class="card result invalid">
 
           <div class="result-icon">
             ×
@@ -1794,7 +1883,7 @@ function showInvalidTicket(
             ${escapeHtml(ticketId)}
           </div>
 
-          <div class="entry-status">
+          <div class="entry">
             ENTRY DENIED
           </div>
 
@@ -1808,7 +1897,7 @@ function showInvalidTicket(
           </p>
 
           <button
-            class="primary-button"
+            class="primary"
             onclick="scanNextTicket()">
 
             SCAN NEXT TICKET
@@ -1827,10 +1916,10 @@ function showInvalidTicket(
 
 
 /* ============================================================
-   SYSTEM ERROR
+   ERROR
    ============================================================ */
 
-function showSystemError(
+function showError(
   message
 ) {
 
@@ -1840,7 +1929,7 @@ function showSystemError(
 
       <div class="container">
 
-        <div class="card result-card result-error">
+        <div class="card result error">
 
           <div class="result-icon">
             !
@@ -1850,12 +1939,12 @@ function showSystemError(
             SYSTEM ERROR
           </div>
 
-          <p class="error-message">
+          <p class="result-message">
             ${escapeHtml(message)}
           </p>
 
           <button
-            class="primary-button"
+            class="primary"
             onclick="scanNextTicket()">
 
             TRY AGAIN
@@ -1902,7 +1991,7 @@ function showCameraError(
 
       <div class="container">
 
-        <div class="card result-card result-error">
+        <div class="card result error">
 
           <div class="result-icon">
             !
@@ -1912,34 +2001,43 @@ function showCameraError(
             CAMERA ERROR
           </div>
 
-          <p class="error-message">
+          <p class="result-message">
             ${escapeHtml(message)}
           </p>
 
-          <p class="small">
-            Make sure camera access is allowed
-            for this website.
-          </p>
+          <div class="camera-help">
+
+            <div class="camera-help-title">
+              📷 Check camera permission
+            </div>
+
+            <p>
+              Chrome → site settings →
+              Permissions → Camera →
+              Allow.
+            </p>
+
+          </div>
+
+          <br>
 
           <button
-            class="primary-button"
+            class="primary"
             onclick="startScanner()">
 
             TRY CAMERA AGAIN
 
           </button>
 
-          <div class="button-gap">
+          <br><br>
 
-            <button
-              class="secondary-button"
-              onclick="showReadyScreen()">
+          <button
+            class="secondary"
+            onclick="showReady()">
 
-              CANCEL
+            CANCEL
 
-            </button>
-
-          </div>
+          </button>
 
         </div>
 
@@ -1953,10 +2051,10 @@ function showCameraError(
 
 
 /* ============================================================
-   CHECKING SCREEN
+   CHECKING
    ============================================================ */
 
-function showCheckingScreen() {
+function showChecking() {
 
   document.getElementById("app").innerHTML = `
 
@@ -1964,7 +2062,7 @@ function showCheckingScreen() {
 
       <div class="container">
 
-        <div class="card checking-card">
+        <div class="card loading-card">
 
           <div class="spinner"></div>
 
@@ -1972,7 +2070,7 @@ function showCheckingScreen() {
             Checking ticket...
           </h2>
 
-          <p>
+          <p class="scanner-details">
             Please wait.
           </p>
 
@@ -1988,18 +2086,71 @@ function showCheckingScreen() {
 
 
 /* ============================================================
-   SCAN NEXT TICKET
+   SCANNER UI
+   ============================================================ */
+
+function renderScanner() {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card">
+
+          <h1>
+            Scan Ticket
+          </h1>
+
+          <p class="subtitle">
+            Point the camera at the QR code
+            printed on the ticket.
+          </p>
+
+
+          <div id="qr-reader"></div>
+
+
+          <p class="scanner-instruction">
+            Align the QR code inside the
+            camera view.
+          </p>
+
+
+          <button
+            class="secondary"
+            onclick="cancelScan()">
+
+            CANCEL
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   SCAN NEXT
    ============================================================ */
 
 async function scanNextTicket() {
 
-  console.log(
-    "SCAN NEXT TICKET clicked"
-  );
-
-
   /*
-   * Reset all state.
+   * This is the important part.
+   *
+   * We do NOT reload the page.
+   *
+   * We completely destroy the previous
+   * Html5Qrcode instance and start a
+   * brand-new camera session.
    */
 
   validationInProgress = false;
@@ -2009,27 +2160,11 @@ async function scanNextTicket() {
   cameraStarting = false;
 
 
-  /*
-   * IMPORTANT:
-   *
-   * Completely release camera from
-   * previous scan before starting
-   * another one.
-   */
-
-  await stopAndDestroyScanner();
+  await cleanupScanner();
 
 
-  /*
-   * Small Android Chrome delay.
-   */
+  await sleep(500);
 
-  await sleep(400);
-
-
-  /*
-   * Start a brand-new scanner.
-   */
 
   startScanner();
 
@@ -2037,14 +2172,158 @@ async function scanNextTicket() {
 
 
 /* ============================================================
-   UNREGISTER SCANNER
+   CANCEL
+   ============================================================ */
+
+async function cancelScan() {
+
+  validationInProgress = false;
+
+  scanInProgress = false;
+
+  cameraStarting = false;
+
+
+  await cleanupScanner();
+
+
+  showReady();
+
+}
+
+
+/* ============================================================
+   CLEANUP CAMERA
+   ============================================================ */
+
+async function cleanupScanner() {
+
+  scannerRunning = false;
+
+
+  if (!scanner) {
+
+    stopAllVideoTracks();
+
+    return;
+
+  }
+
+
+  try {
+
+    if (
+      scanner.isScanning
+    ) {
+
+      await scanner.stop();
+
+    }
+
+  } catch (e) {
+
+    console.warn(
+      "Scanner stop:",
+      e
+    );
+
+  }
+
+
+  try {
+
+    await scanner.clear();
+
+  } catch (e) {
+
+    console.warn(
+      "Scanner clear:",
+      e
+    );
+
+  }
+
+
+  scanner = null;
+
+
+  stopAllVideoTracks();
+
+
+  /*
+   * Android Chrome sometimes needs
+   * a little time to release camera.
+   */
+
+  await sleep(250);
+
+}
+
+
+/* ============================================================
+   STOP ALL CAMERA TRACKS
+   ============================================================ */
+
+function stopAllVideoTracks() {
+
+  try {
+
+    const videos =
+      document.querySelectorAll(
+        "video"
+      );
+
+
+    videos.forEach(
+      function(video) {
+
+        if (
+          video.srcObject
+        ) {
+
+          const stream =
+            video.srcObject;
+
+
+          stream
+            .getTracks()
+            .forEach(
+              function(track) {
+
+                track.stop();
+
+              }
+            );
+
+
+          video.srcObject = null;
+
+        }
+
+      }
+    );
+
+  } catch (e) {
+
+    console.warn(
+      "Camera cleanup:",
+      e
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   UNREGISTER
    ============================================================ */
 
 async function unregisterScanner() {
 
   const confirmed =
     window.confirm(
-      "Unregister this scanner from this phone?"
+      "Unregister this phone as an event scanner?"
     );
 
 
@@ -2055,34 +2334,34 @@ async function unregisterScanner() {
   }
 
 
-  await stopAndDestroyScanner();
+  await cleanupScanner();
 
 
   localStorage.removeItem(
-    STORAGE_KEYS.scannerId
+    STORAGE.registered
   );
 
   localStorage.removeItem(
-    STORAGE_KEYS.scannerName
+    STORAGE.scannerId
   );
 
   localStorage.removeItem(
-    STORAGE_KEYS.registered
+    STORAGE.scannerName
   );
 
 
-  showRegistrationScreen();
+  showRegistration();
 
 }
 
 
 /* ============================================================
-   API CALL
+   API REQUEST
    ============================================================ */
 
-async function callApi(
+async function apiRequest(
   action,
-  params = {}
+  parameters = {}
 ) {
 
   if (
@@ -2091,7 +2370,7 @@ async function callApi(
   ) {
 
     throw new Error(
-      "Apps Script API URL has not been configured."
+      "Apps Script API URL is not configured."
     );
 
   }
@@ -2109,12 +2388,13 @@ async function callApi(
   );
 
 
-  Object.keys(params)
+  Object.keys(parameters)
     .forEach(
       function(key) {
 
         const value =
-          params[key];
+          parameters[key];
+
 
         if (
           value !== undefined &&
@@ -2133,8 +2413,8 @@ async function callApi(
 
 
   console.log(
-    "API request:",
-    action
+    "API:",
+    url.toString()
   );
 
 
@@ -2158,7 +2438,7 @@ async function callApi(
   ) {
 
     throw new Error(
-      "Server returned HTTP " +
+      "Server error: HTTP " +
       response.status
     );
 
@@ -2170,7 +2450,7 @@ async function callApi(
 
 
   console.log(
-    "API raw response:",
+    "API response:",
     text
   );
 
@@ -2181,7 +2461,7 @@ async function callApi(
       text
     );
 
-  } catch (error) {
+  } catch (e) {
 
     throw new Error(
       "The server returned an invalid response."
@@ -2193,20 +2473,20 @@ async function callApi(
 
 
 /* ============================================================
-   API CALL WITH TIMEOUT
+   API WITH TIMEOUT
    ============================================================ */
 
-async function callApiWithTimeout(
+async function apiRequestWithTimeout(
   action,
-  params,
+  parameters,
   timeout
 ) {
 
   return Promise.race([
 
-    callApi(
+    apiRequest(
       action,
-      params
+      parameters
     ),
 
     new Promise(
@@ -2220,7 +2500,7 @@ async function callApiWithTimeout(
 
             reject(
               new Error(
-                "The ticket server did not respond. Please check the internet connection and try again."
+                "The ticket server did not respond. Check the internet connection."
               )
             );
 
@@ -2237,10 +2517,111 @@ async function callApiWithTimeout(
 
 
 /* ============================================================
-   CONFIGURATION ERROR
+   UNKNOWN ACTION DETECTOR
    ============================================================ */
 
-function showConfigurationError() {
+function isUnknownAction(
+  result
+) {
+
+  if (!result) {
+
+    return false;
+
+  }
+
+
+  const text =
+    String(
+      result.message ||
+      result.error ||
+      ""
+    ).toLowerCase();
+
+
+  return (
+    text.includes(
+      "unknown api action"
+    ) ||
+    text.includes(
+      "unknown action"
+    )
+  );
+
+}
+
+
+/* ============================================================
+   MESSAGE
+   ============================================================ */
+
+function showMessage(
+  element,
+  text,
+  error
+) {
+
+  element.textContent =
+    text;
+
+
+  element.className =
+    "message " +
+    (
+      error
+        ? "error"
+        : "success"
+    );
+
+}
+
+
+/* ============================================================
+   FRIENDLY ERROR
+   ============================================================ */
+
+function friendlyError(
+  error
+) {
+
+  if (!error) {
+
+    return "Something went wrong.";
+
+  }
+
+
+  const text =
+    String(
+      error.message ||
+      error
+    );
+
+
+  if (
+    text.includes(
+      "Failed to fetch"
+    )
+  ) {
+
+    return (
+      "Could not connect to the ticket server. " +
+      "Please check the internet connection."
+    );
+
+  }
+
+
+  return text;
+
+}
+
+
+/* ============================================================
+   CONFIG ERROR
+   ============================================================ */
+
+function showConfigError() {
 
   document.getElementById("app").innerHTML = `
 
@@ -2248,7 +2629,7 @@ function showConfigurationError() {
 
       <div class="container">
 
-        <div class="card result-card result-error">
+        <div class="card result error">
 
           <div class="result-icon">
             !
@@ -2258,9 +2639,9 @@ function showConfigurationError() {
             CONFIGURATION ERROR
           </div>
 
-          <p class="error-message">
-            The Apps Script API URL has not been
-            configured in index.html.
+          <p class="result-message">
+            The Apps Script API URL has not
+            been configured.
           </p>
 
         </div>
@@ -2275,7 +2656,7 @@ function showConfigurationError() {
 
 
 /* ============================================================
-   UTILITY: SLEEP
+   UTILITIES
    ============================================================ */
 
 function sleep(
@@ -2295,10 +2676,6 @@ function sleep(
 
 }
 
-
-/* ============================================================
-   UTILITY: ESCAPE HTML
-   ============================================================ */
 
 function escapeHtml(
   value
@@ -2332,24 +2709,18 @@ function escapeHtml(
 
 
 /* ============================================================
-   HANDLE PAGE CLOSING / HIDING
+   PAGE VISIBILITY
    ============================================================ */
 
 document.addEventListener(
   "visibilitychange",
-  async function() {
-
-    /*
-     * If the user leaves the page,
-     * release the camera.
-     */
+  function() {
 
     if (
-      document.hidden &&
-      scanner
+      document.hidden
     ) {
 
-      await stopAndDestroyScanner();
+      cleanupScanner();
 
     }
 
@@ -2358,19 +2729,12 @@ document.addEventListener(
 
 
 /* ============================================================
-   HANDLE BACK/FORWARD CACHE
+   BACK/FORWARD CACHE
    ============================================================ */
 
 window.addEventListener(
   "pageshow",
   function(event) {
-
-    /*
-     * Android Chrome may restore the page
-     * from its back-forward cache.
-
-     * Make sure the scanner state is clean.
-     */
 
     if (
       event.persisted
@@ -2380,13 +2744,14 @@ window.addEventListener(
 
       scannerRunning = false;
 
+      cameraStarting = false;
+
       scanInProgress = false;
 
       validationInProgress = false;
 
-      cameraStarting = false;
 
-      initializeApp();
+      initialize();
 
     }
 

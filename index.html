@@ -518,6 +518,13 @@ label {
   }
 }
 
+
+/* Scanner button state */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 </style>
 </head>
 
@@ -654,8 +661,10 @@ label {
 
     <div id="deviceInfo" class="device"></div>
 
-    <button class="primary"
-            onclick="startCamera()">
+    <button id="scanTicketButton"
+            type="button"
+            class="primary"
+            onclick="void startCamera()">
       📷 SCAN TICKET
     </button>
 
@@ -1076,8 +1085,12 @@ function registerScanner() {
 
 async function startCamera() {
 
-  if (scanning || scannerStartPromise) {
-    return;
+  /*
+   * Always clean up any previous scanner instance before
+   * starting a new session.
+   */
+  if (scanner || scanning || scannerStartPromise) {
+    await destroyScanner();
   }
 
   show('camera');
@@ -1085,32 +1098,85 @@ async function startCamera() {
   const reader =
     document.getElementById('reader');
 
+  const status =
+    document.getElementById('cameraStatus');
+
+  const scanButton =
+    document.getElementById('scanTicketButton');
+
+  if (!reader || !status) {
+    showSystemError(
+      'Scanner interface could not be initialized.'
+    );
+    return;
+  }
+
   reader.innerHTML = '';
 
-  document
-    .getElementById('cameraStatus')
-    .textContent =
-      'Starting camera...';
+  status.textContent =
+    'Starting camera...';
+
+  if (scanButton) {
+    scanButton.disabled = true;
+  }
 
   try {
+
+    /*
+     * Get the actual cameras first.
+     *
+     * This is the recommended html5-qrcode approach and
+     * gives us a concrete camera device ID to start.
+     */
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+    if (!cameras || !cameras.length) {
+      throw new Error(
+        'No camera was found on this device.'
+      );
+    }
+
+    /*
+     * Prefer a rear/environment camera.
+     *
+     * Android Chrome normally exposes labels such as:
+     * "back camera", "rear camera", etc.
+     *
+     * If the label is unavailable, fall back to the
+     * first camera.
+     */
+    const rearCamera =
+      cameras.find(function(camera) {
+
+        const label =
+          String(camera.label || '')
+            .toLowerCase();
+
+        return (
+          label.includes('back') ||
+          label.includes('rear') ||
+          label.includes('environment')
+        );
+
+      });
+
+    const cameraId =
+      rearCamera
+        ? rearCamera.id
+        : cameras[0].id;
 
     scanner =
       new Html5Qrcode('reader');
 
-    /*
-     * Keep the promise so another button/page event cannot
-     * start a second camera while the first one is starting.
-     */
     scannerStartPromise =
       scanner.start(
 
         /*
-         * html5-qrcode accepts the camera selector in this form.
-         * Do NOT use { ideal: "environment" } here.
+         * Use the actual device ID rather than
+         * facingMode. This is more deterministic.
          */
-        {
-          facingMode: "environment"
-        },
+        cameraId,
 
         {
           fps: 10,
@@ -1142,38 +1208,31 @@ async function startCamera() {
 
         function(decodedText) {
 
-          /*
-           * html5-qrcode can detect the same QR repeatedly.
-           * More importantly, when the operator taps
-           * "SCAN NEXT TICKET", the previous ticket may still
-           * be physically in front of the camera.
-           *
-           * Ignore that same ticket until a different QR is
-           * presented. This prevents an immediate second
-           * validation of the ticket that just produced the
-           * result screen.
-           */
           if (!scanning) {
             return;
           }
 
-          const normalizedTicketId =
+          const ticketId =
             String(decodedText || '')
               .trim()
               .toUpperCase();
 
-          if (!normalizedTicketId) {
+          if (!ticketId) {
             return;
           }
 
+          /*
+           * If the operator presses Scan Next while the
+           * previous ticket is still in front of the camera,
+           * don't immediately validate that same ticket.
+           */
           if (
             lastScannedTicketId &&
-            normalizedTicketId === lastScannedTicketId
+            ticketId === lastScannedTicketId
           ) {
-            document
-              .getElementById('cameraStatus')
-              .textContent =
-                'Please present the next ticket.';
+
+            status.textContent =
+              'Please present the next ticket.';
 
             return;
           }
@@ -1181,15 +1240,14 @@ async function startCamera() {
           scanning = false;
 
           lastScannedTicketId =
-            normalizedTicketId;
+            ticketId;
 
-          handleDecodedTicket(normalizedTicketId);
+          handleDecodedTicket(ticketId);
         },
 
         function() {
           /*
-           * QR not detected yet.
-           * Intentionally silent.
+           * Normal: QR not detected in this frame.
            */
         }
       );
@@ -1197,13 +1255,10 @@ async function startCamera() {
     await scannerStartPromise;
 
     scannerStartPromise = null;
-
     scanning = true;
 
-    document
-      .getElementById('cameraStatus')
-      .textContent =
-        'Point the camera at the QR code.';
+    status.textContent =
+      'Point the camera at the QR code.';
 
   } catch (error) {
 
@@ -1213,6 +1268,12 @@ async function startCamera() {
     await destroyScanner();
 
     showCameraError(error);
+
+  } finally {
+
+    if (scanButton) {
+      scanButton.disabled = false;
+    }
   }
 }
 

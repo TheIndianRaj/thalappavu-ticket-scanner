@@ -844,7 +844,15 @@ const TOKEN_KEY =
 
 let scanner = null;
 let scanning = false;
+let scannerStartPromise = null;
 let currentOperation = null;
+
+/*
+ * Ticket that produced the current result.
+ * When "SCAN NEXT TICKET" is pressed, the scanner will ignore
+ * this same QR while it is still in front of the camera.
+ */
+let lastScannedTicketId = null;
 
 
 /* =========================================================
@@ -1135,17 +1143,47 @@ async function startCamera() {
         function(decodedText) {
 
           /*
-           * html5-qrcode can call the success callback more
-           * than once for the same QR while it is visible.
-           * Lock immediately.
+           * html5-qrcode can detect the same QR repeatedly.
+           * More importantly, when the operator taps
+           * "SCAN NEXT TICKET", the previous ticket may still
+           * be physically in front of the camera.
+           *
+           * Ignore that same ticket until a different QR is
+           * presented. This prevents an immediate second
+           * validation of the ticket that just produced the
+           * result screen.
            */
           if (!scanning) {
             return;
           }
 
+          const normalizedTicketId =
+            String(decodedText || '')
+              .trim()
+              .toUpperCase();
+
+          if (!normalizedTicketId) {
+            return;
+          }
+
+          if (
+            lastScannedTicketId &&
+            normalizedTicketId === lastScannedTicketId
+          ) {
+            document
+              .getElementById('cameraStatus')
+              .textContent =
+                'Please present the next ticket.';
+
+            return;
+          }
+
           scanning = false;
 
-          handleDecodedTicket(decodedText);
+          lastScannedTicketId =
+            normalizedTicketId;
+
+          handleDecodedTicket(normalizedTicketId);
         },
 
         function() {
@@ -1504,9 +1542,19 @@ async function nextTicket() {
   currentOperation = null;
 
   /*
-   * Result screen -> immediately start the next scan.
-   * This avoids leaving the user on an intermediate screen.
+   * Always start a completely new camera session.
+   * Keep lastScannedTicketId so that if the previous ticket
+   * is still in front of the camera it is ignored.
    */
+  await destroyScanner();
+
+  show('camera');
+
+  document
+    .getElementById('cameraStatus')
+    .textContent =
+      'Starting camera...';
+
   await startCamera();
 }
 

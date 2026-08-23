@@ -210,6 +210,518 @@ label {
   margin: 18px 0 7px;
 }
 
+/* =========================================================
+   REGISTRATION PAGE
+========================================================= */
+
+.registration-page {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  padding:
+    28px 18px
+    40px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #eef2f7 100%
+    );
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+  width: 100%;
+  max-width: 520px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 23px;
+  font-weight: 800;
+
+  box-shadow:
+    0 4px 10px
+    rgba(0,0,0,.12);
+}
+
+.festival-name {
+  font-size: 16px;
+
+  font-weight: 800;
+
+  letter-spacing:
+    .08em;
+
+  color: #111827;
+}
+
+.system-name {
+  margin-top: 2px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  letter-spacing:
+    .12em;
+
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   REGISTRATION CARD
+========================================================= */
+
+.registration-card {
+  width: 100%;
+  max-width: 520px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding:
+    30px 28px
+    24px;
+
+  border:
+    1px solid #e5e7eb;
+
+  box-shadow:
+    0 10px 30px
+    rgba(15,23,42,.08);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.setup-icon {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #eef4ff;
+
+  font-size: 24px;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.eyebrow {
+  color: #2563eb;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing:
+    .12em;
+
+  margin-bottom: 8px;
+}
+
+.registration-card h1 {
+  margin: 0;
+
+  font-size: 30px;
+
+  line-height: 1.15;
+
+  letter-spacing:
+    -.025em;
+
+  color: #111827;
+}
+
+.intro {
+  margin:
+    10px 0
+    28px;
+
+  max-width: 430px;
+
+  font-size: 15px;
+
+  line-height: 1.55;
+
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+  margin-bottom: 19px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing:
+    .08em;
+
+  color: #374151;
+}
+
+.input-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+
+  left: 15px;
+
+  font-size: 17px;
+
+  pointer-events: none;
+
+  opacity: .7;
+}
+
+.input-wrapper input {
+  width: 100%;
+
+  height: 54px;
+
+  padding:
+    0 48px
+    0 45px;
+
+  border:
+    1.5px solid #d1d5db;
+
+  border-radius: 11px;
+
+  outline: none;
+
+  background: #fff;
+
+  color: #111827;
+
+  font-size: 16px;
+
+  transition:
+    border-color .15s,
+    box-shadow .15s,
+    background .15s;
+}
+
+.input-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.input-wrapper input:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37,99,235,.12);
+
+  background: #fff;
+}
+
+.password-toggle {
+  position: absolute;
+
+  right: 7px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 17px;
+
+  opacity: .65;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+========================================================= */
+
+.security-note {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 11px;
+
+  margin:
+    6px 0
+    22px;
+
+  padding: 13px;
+
+  border-radius: 11px;
+
+  background: #f8fafc;
+
+  border:
+    1px solid #e5e7eb;
+}
+
+.security-check {
+  flex-shrink: 0;
+
+  width: 23px;
+  height: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+.security-note strong {
+  display: block;
+
+  font-size: 13px;
+
+  color: #374151;
+
+  margin-bottom: 2px;
+}
+
+.security-note span {
+  display: block;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   REGISTER BUTTON
+========================================================= */
+
+.register-button {
+  width: 100%;
+
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+  letter-spacing:
+    .02em;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px
+    rgba(37,99,235,.20);
+
+  transition:
+    background .15s,
+    transform .1s,
+    box-shadow .15s;
+}
+
+.register-button:hover {
+  background: #1d4ed8;
+
+  box-shadow:
+    0 6px 14px
+    rgba(37,99,235,.25);
+}
+
+.register-button:active {
+  transform:
+    translateY(1px);
+}
+
+.button-arrow {
+  font-size: 20px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.registration-error {
+  display: none;
+
+  margin-top: 14px;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+
+  background: #fef2f2;
+
+  border:
+    1px solid #fecaca;
+
+  color: #b91c1c;
+
+  font-size: 13px;
+
+  line-height: 1.45;
+}
+
+.registration-error:not(:empty) {
+  display: block;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.setup-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: 20px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    .07em;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .registration-page {
+    padding:
+      20px 14px
+      30px;
+  }
+
+  .brand {
+    margin-bottom: 16px;
+  }
+
+  .registration-card {
+    padding:
+      25px 20px
+      20px;
+
+    border-radius: 18px;
+  }
+
+  .registration-card h1 {
+    font-size: 27px;
+  }
+
+  .intro {
+    margin-bottom: 24px;
+  }
+
+}
+
 </style>
 
 </head>
@@ -236,44 +748,153 @@ label {
      REGISTRATION
 ========================================= -->
 
-<div id="registration"
-     class="card hidden">
+<div id="registration" class="registration-page hidden">
 
-  <h1>Register Scanner</h1>
+  <div class="brand">
+    <div class="brand-mark">✓</div>
 
-  <div class="sub">
-    Register this phone as an
-    authorized event scanner.
+    <div>
+      <div class="festival-name">
+        THALAPPAVU 2026
+      </div>
+
+      <div class="system-name">
+        TICKET VERIFICATION
+      </div>
+    </div>
   </div>
 
 
-  <label>
-    Scanner name
-  </label>
+  <div class="registration-card">
 
-  <input id="deviceName"
-         placeholder="Main Gate 1">
+    <div class="setup-icon">
+      🔐
+    </div>
 
+    <div class="eyebrow">
+      SCANNER SETUP
+    </div>
 
-  <label>
-    Registration code
-  </label>
+    <h1>
+      Register this phone
+    </h1>
 
-  <input id="registrationCode"
-         type="password"
-         placeholder="Registration code">
-
-
-  <button class="primary"
-          onclick="registerScanner()">
-
-    REGISTER THIS PHONE
-
-  </button>
+    <p class="intro">
+      Authorize this phone to validate tickets at the event entrance.
+    </p>
 
 
-  <div id="registrationError"
-       class="error">
+    <div class="form-group">
+
+      <label for="deviceName">
+        SCANNER NAME
+      </label>
+
+      <div class="input-wrapper">
+
+        <span class="input-icon">
+          📱
+        </span>
+
+        <input
+          id="deviceName"
+          type="text"
+          placeholder="e.g. Main Gate 1"
+          autocomplete="off"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="registrationCode">
+        REGISTRATION CODE
+      </label>
+
+      <div class="input-wrapper">
+
+        <span class="input-icon">
+          🔑
+        </span>
+
+        <input
+          id="registrationCode"
+          type="password"
+          placeholder="Enter registration code"
+          autocomplete="off"
+        >
+
+        <button
+          type="button"
+          class="password-toggle"
+          onclick="toggleRegistrationCode()"
+          aria-label="Show registration code">
+
+          👁
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="security-note">
+
+      <div class="security-check">
+        ✓
+      </div>
+
+      <div>
+
+        <strong>
+          Authorized scanner
+        </strong>
+
+        <span>
+          This phone will be registered
+          for ticket validation.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="register-button"
+      onclick="registerScanner()">
+
+      <span>
+        REGISTER THIS PHONE
+      </span>
+
+      <span class="button-arrow">
+        →
+      </span>
+
+    </button>
+
+
+    <div
+      id="registrationError"
+      class="registration-error">
+    </div>
+
+
+    <div class="setup-footer">
+
+      <span>ONE-TIME SETUP</span>
+
+      <span>•</span>
+
+      <span>KEEP THIS PHONE AT THE ENTRANCE</span>
+
+    </div>
+
   </div>
 
 </div>
@@ -477,6 +1098,32 @@ const TOKEN_KEY =
 let scanner = null;
 
 let scanning = false;
+
+/* =========================================================
+   TOGGLE REG CODE
+========================================================= */
+
+
+function toggleRegistrationCode() {
+
+  const input =
+    document.getElementById(
+      'registrationCode'
+    );
+
+  if (
+    input.type === 'password'
+  ) {
+
+    input.type = 'text';
+
+  } else {
+
+    input.type = 'password';
+
+  }
+
+}
 
 
 /* =========================================================

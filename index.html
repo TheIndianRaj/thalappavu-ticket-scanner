@@ -633,64 +633,6 @@ function registerScanner() {
 
 
   show('loading');
-
-
-  postToBackend({
-    action:
-      'registerDevice',
-
-    requestId:
-      requestId,
-
-    deviceName:
-      name,
-
-    registrationCode:
-      code
-
-  });
-
-
-  pollResult(
-    requestId,
-
-    function(result) {
-
-      if (!result.success) {
-
-        show('registration');
-
-
-        document
-          .getElementById(
-            'registrationError'
-          )
-          .textContent =
-            result.message;
-
-        return;
-
-      }
-
-
-      localStorage.setItem(
-        DEVICE_KEY,
-        result.deviceId
-      );
-
-
-      localStorage.setItem(
-        TOKEN_KEY,
-        result.token
-      );
-
-
-      start();
-
-    }
-
-  );
-
 }
 
 

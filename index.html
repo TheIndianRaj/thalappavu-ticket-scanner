@@ -248,6 +248,18 @@
         box-shadow .2s;
     }
 
+    .input.invalid {
+      border-color: #d7192e;
+      box-shadow:
+        0 0 0 3px
+        rgba(
+          215,
+          25,
+          46,
+          0.08
+        );
+    }
+
     .input:focus {
       border-color: #087ff5;
 
@@ -925,35 +937,69 @@ function showRegistration() {
           </div>
 
 
-          <div class="form-group">
+          <form id="registrationForm" novalidate>
 
-            <label
-              class="label"
-              for="registrationCode">
+            <div class="form-group">
 
-              Registration code
+              <label
+                class="label"
+                for="scannerName">
 
-            </label>
+                Scanner name
 
-            <input
-              id="registrationCode"
-              class="input"
-              type="password"
-              placeholder="Enter registration code"
-              autocomplete="off"
-            >
+              </label>
 
-          </div>
+              <input
+                id="scannerName"
+                name="scannerName"
+                class="input"
+                type="text"
+                placeholder="Main Gate 1"
+                autocomplete="off"
+                autocapitalize="words"
+                spellcheck="false"
+                required
+              >
+
+            </div>
 
 
-          <button
-            id="registerButton"
-            class="primary"
-            onclick="registerScanner()">
+            <div class="form-group">
 
-            REGISTER THIS PHONE
+              <label
+                class="label"
+                for="registrationCode">
 
-          </button>
+                Registration code
+
+              </label>
+
+              <input
+                id="registrationCode"
+                name="registrationCode"
+                class="input"
+                type="text"
+                inputmode="text"
+                placeholder="Enter registration code"
+                autocomplete="off"
+                autocapitalize="none"
+                spellcheck="false"
+                required
+              >
+
+            </div>
+
+
+            <button
+              id="registerButton"
+              class="primary"
+              type="submit">
+
+              REGISTER THIS PHONE
+
+            </button>
+
+          </form>
 
 
           <div
@@ -984,6 +1030,17 @@ function showRegistration() {
 
   `;
 
+  const registrationForm =
+    document.getElementById("registrationForm");
+
+  registrationForm.addEventListener(
+    "submit",
+    function(event) {
+      event.preventDefault();
+      registerScanner();
+    }
+  );
+
 }
 
 
@@ -993,53 +1050,55 @@ function showRegistration() {
 
 async function registerScanner() {
 
-  const name =
-    document
-      .getElementById("scannerName")
-      .value
-      .trim();
+  const nameInput =
+    document.getElementById("scannerName");
 
-  const code =
-    document
-      .getElementById("registrationCode")
-      .value
-      .trim();
-
+  const codeInput =
+    document.getElementById("registrationCode");
 
   const button =
-    document.getElementById(
-      "registerButton"
-    );
+    document.getElementById("registerButton");
 
   const message =
-    document.getElementById(
-      "registrationMessage"
-    );
+    document.getElementById("registrationMessage");
 
 
-  if (!name) {
+  /*
+   * Read directly from the actual form controls.
+   * Do not use a different field name or dataset value.
+   */
+  const name =
+    String(nameInput.value || "").trim();
+
+  const code =
+    String(codeInput.value || "").trim();
+
+
+  nameInput.classList.remove("invalid");
+  codeInput.classList.remove("invalid");
+
+
+  if (!name || !code) {
+
+    if (!name) {
+      nameInput.classList.add("invalid");
+    }
+
+    if (!code) {
+      codeInput.classList.add("invalid");
+    }
 
     showMessage(
       message,
-      "Please enter a scanner name.",
+      !name && !code
+        ? "Please enter the scanner name and registration code."
+        : !name
+          ? "Please enter a scanner name."
+          : "Please enter the registration code.",
       true
     );
 
     return;
-
-  }
-
-
-  if (!code) {
-
-    showMessage(
-      message,
-      "Please enter the registration code.",
-      true
-    );
-
-    return;
-
   }
 
 
@@ -1047,6 +1106,7 @@ async function registerScanner() {
 
   button.textContent =
     "REGISTERING...";
+
 
   showMessage(
     message,
@@ -1058,48 +1118,43 @@ async function registerScanner() {
   try {
 
     /*
-     * IMPORTANT:
-     *
-     * We first try registerScanner.
-     *
-     * If the existing Apps Script uses
-     * register instead, we automatically
-     * try that too.
+     * Send the normal parameter names PLUS compatibility aliases.
+     * This protects the frontend from small naming differences
+     * between versions of the Apps Script backend.
      */
+    const parameters = {
+
+      scannerName: name,
+
+      registrationCode: code,
+
+      deviceName: name,
+
+      regCode: code,
+
+      name: name,
+
+      code: code
+
+    };
+
 
     let result =
       await apiRequest(
         "registerScanner",
-        {
-          scannerName: name,
-          registrationCode: code
-        }
+        parameters
       );
 
 
     /*
-     * Compatibility fallback.
-     *
-     * This handles older versions of
-     * your Apps Script backend.
+     * Older backend versions may expose register instead.
      */
-
-    if (
-      isUnknownAction(result)
-    ) {
-
-      console.log(
-        "registerScanner not supported. Trying register..."
-      );
-
+    if (isUnknownAction(result)) {
 
       result =
         await apiRequest(
           "register",
-          {
-            scannerName: name,
-            registrationCode: code
-          }
+          parameters
         );
 
     }
@@ -1111,9 +1166,7 @@ async function registerScanner() {
     );
 
 
-    if (
-      !result
-    ) {
+    if (!result) {
 
       throw new Error(
         "No response received from the server."
@@ -1136,7 +1189,7 @@ async function registerScanner() {
       if (!scannerId) {
 
         throw new Error(
-          "Registration succeeded but the server did not return a scanner ID."
+          "The server accepted the registration but did not return a scanner ID."
         );
 
       }
@@ -1149,7 +1202,7 @@ async function registerScanner() {
 
       localStorage.setItem(
         STORAGE.scannerId,
-        scannerId
+        String(scannerId)
       );
 
       localStorage.setItem(
@@ -1168,7 +1221,7 @@ async function registerScanner() {
     throw new Error(
       result.message ||
       result.error ||
-      "Registration was rejected."
+      "Registration was rejected by the server."
     );
 
 
@@ -1188,9 +1241,7 @@ async function registerScanner() {
 
     showMessage(
       message,
-      friendlyError(
-        error
-      ),
+      friendlyError(error),
       true
     );
 
@@ -1257,8 +1308,9 @@ function showReady() {
 
 
           <button
+            id="scanButton"
             class="primary"
-            onclick="startScanner()">
+            type="button">
 
             📷 &nbsp; SCAN TICKET
 
@@ -1321,8 +1373,9 @@ function showReady() {
           <div style="margin-top:20px;">
 
             <button
+              id="unregisterButton"
               class="secondary"
-              onclick="unregisterScanner()">
+              type="button">
 
               Unregister this scanner
 
@@ -1337,6 +1390,20 @@ function showReady() {
     </div>
 
   `;
+
+  document
+    .getElementById("scanButton")
+    .addEventListener(
+      "click",
+      startScanner
+    );
+
+  document
+    .getElementById("unregisterButton")
+    .addEventListener(
+      "click",
+      unregisterScanner
+    );
 
 }
 
@@ -1775,8 +1842,9 @@ function showValid(
           </p>
 
           <button
+            id="nextScanButton"
             class="primary"
-            onclick="scanNextTicket()">
+            type="button">
 
             SCAN NEXT TICKET
 
@@ -1789,6 +1857,16 @@ function showValid(
     </div>
 
   `;
+
+  const nextScanButton =
+    document.getElementById("nextScanButton");
+
+  if (nextScanButton) {
+    nextScanButton.addEventListener(
+      "click",
+      scanNextTicket
+    );
+  }
 
 }
 
@@ -1836,8 +1914,9 @@ function showUsed(
           </p>
 
           <button
+            id="nextScanButton"
             class="primary"
-            onclick="scanNextTicket()">
+            type="button">
 
             SCAN NEXT TICKET
 
@@ -1850,6 +1929,16 @@ function showUsed(
     </div>
 
   `;
+
+  const nextScanButton =
+    document.getElementById("nextScanButton");
+
+  if (nextScanButton) {
+    nextScanButton.addEventListener(
+      "click",
+      scanNextTicket
+    );
+  }
 
 }
 
@@ -1897,8 +1986,9 @@ function showInvalid(
           </p>
 
           <button
+            id="nextScanButton"
             class="primary"
-            onclick="scanNextTicket()">
+            type="button">
 
             SCAN NEXT TICKET
 
@@ -1911,6 +2001,16 @@ function showInvalid(
     </div>
 
   `;
+
+  const nextScanButton =
+    document.getElementById("nextScanButton");
+
+  if (nextScanButton) {
+    nextScanButton.addEventListener(
+      "click",
+      scanNextTicket
+    );
+  }
 
 }
 
@@ -1944,8 +2044,9 @@ function showError(
           </p>
 
           <button
+            id="tryAgainButton"
             class="primary"
-            onclick="scanNextTicket()">
+            type="button">
 
             TRY AGAIN
 
@@ -1958,6 +2059,16 @@ function showError(
     </div>
 
   `;
+
+  const tryAgainButton =
+    document.getElementById("tryAgainButton");
+
+  if (tryAgainButton) {
+    tryAgainButton.addEventListener(
+      "click",
+      scanNextTicket
+    );
+  }
 
 }
 
@@ -2022,8 +2133,9 @@ function showCameraError(
           <br>
 
           <button
+            id="retryCameraButton"
             class="primary"
-            onclick="startScanner()">
+            type="button">
 
             TRY CAMERA AGAIN
 
@@ -2032,8 +2144,9 @@ function showCameraError(
           <br><br>
 
           <button
+            id="cancelCameraButton"
             class="secondary"
-            onclick="showReady()">
+            type="button">
 
             CANCEL
 
@@ -2046,6 +2159,26 @@ function showCameraError(
     </div>
 
   `;
+
+  const retryCameraButton =
+    document.getElementById("retryCameraButton");
+
+  const cancelCameraButton =
+    document.getElementById("cancelCameraButton");
+
+  if (retryCameraButton) {
+    retryCameraButton.addEventListener(
+      "click",
+      startScanner
+    );
+  }
+
+  if (cancelCameraButton) {
+    cancelCameraButton.addEventListener(
+      "click",
+      showReady
+    );
+  }
 
 }
 
@@ -2119,8 +2252,9 @@ function renderScanner() {
 
 
           <button
+            id="cancelScanButton"
             class="secondary"
-            onclick="cancelScan()">
+            type="button">
 
             CANCEL
 
@@ -2133,6 +2267,16 @@ function renderScanner() {
     </div>
 
   `;
+
+  const cancelScanButton =
+    document.getElementById("cancelScanButton");
+
+  if (cancelScanButton) {
+    cancelScanButton.addEventListener(
+      "click",
+      cancelScan
+    );
+  }
 
 }
 
@@ -2166,7 +2310,7 @@ async function scanNextTicket() {
   await sleep(500);
 
 
-  startScanner();
+  await startScanner();
 
 }
 
@@ -2200,51 +2344,45 @@ async function cleanupScanner() {
 
   scannerRunning = false;
 
+  /*
+   * Detach the instance immediately. This prevents a second
+   * cleanup/start operation from acting on the same scanner.
+   */
+  const oldScanner = scanner;
+  scanner = null;
 
-  if (!scanner) {
+  if (oldScanner) {
 
-    stopAllVideoTracks();
+    try {
 
-    return;
+      if (oldScanner.isScanning) {
+        await oldScanner.stop();
+      }
 
-  }
+    } catch (e) {
 
-
-  try {
-
-    if (
-      scanner.isScanning
-    ) {
-
-      await scanner.stop();
+      console.warn(
+        "Scanner stop:",
+        e
+      );
 
     }
 
-  } catch (e) {
 
-    console.warn(
-      "Scanner stop:",
-      e
-    );
+    try {
 
-  }
+      await oldScanner.clear();
 
+    } catch (e) {
 
-  try {
+      console.warn(
+        "Scanner clear:",
+        e
+      );
 
-    await scanner.clear();
-
-  } catch (e) {
-
-    console.warn(
-      "Scanner clear:",
-      e
-    );
+    }
 
   }
-
-
-  scanner = null;
 
 
   stopAllVideoTracks();
@@ -2482,36 +2620,47 @@ async function apiRequestWithTimeout(
   timeout
 ) {
 
-  return Promise.race([
+  let timer;
 
-    apiRequest(
-      action,
-      parameters
-    ),
+  try {
 
-    new Promise(
-      function(
-        resolve,
-        reject
-      ) {
+    return await Promise.race([
 
-        setTimeout(
-          function() {
+      apiRequest(
+        action,
+        parameters
+      ),
 
-            reject(
-              new Error(
-                "The ticket server did not respond. Check the internet connection."
-              )
+      new Promise(
+        function(
+          resolve,
+          reject
+        ) {
+
+          timer =
+            setTimeout(
+              function() {
+
+                reject(
+                  new Error(
+                    "The ticket server did not respond. Check the internet connection."
+                  )
+                );
+
+              },
+              timeout
             );
 
-          },
-          timeout
-        );
+        }
+      )
 
-      }
-    )
+    ]);
 
-  ]);
+  } finally {
+
+    clearTimeout(timer);
+
+  }
 
 }
 

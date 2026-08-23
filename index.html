@@ -1,1855 +1,2397 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Thalappavu Ticket Scanner</title>
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #f4f6f8;
-  font-family: Arial, sans-serif;
-  color: #202124;
-}
-
-.page {
-  max-width: 520px;
-  margin: auto;
-  padding: 16px;
-}
-
-.card {
-  background: white;
-  border-radius: 22px;
-  padding: 25px 20px;
-  margin-top: 15px;
-  box-shadow: 0 3px 15px rgba(0,0,0,.08);
-}
-
-.hidden {
-  display: none !important;
-}
-
-h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-}
-
-.sub {
-  color: #666;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.ready {
-  color: #188038;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.device {
-  color: #666;
-  margin: 8px 0 25px;
-}
-
-button {
-  width: 100%;
-  border: none;
-  border-radius: 13px;
-  padding: 17px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: .6;
-  cursor: default;
-}
-
-.primary {
-  background: #1a73e8;
-  color: white;
-}
-
-.secondary {
-  background: #eee;
-  margin-top: 15px;
-}
-
-input {
-  width: 100%;
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  font-size: 17px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin: 18px 0 7px;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.loading-spinner {
-  width: 34px;
-  height: 34px;
-  margin: 0 auto 16px;
-  border: 4px solid #e0e0e0;
-  border-top-color: #1a73e8;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-
-/* =========================================================
-   REGISTRATION
-   ========================================================= */
-
-.registration-page {
-  min-height: 100vh;
-  padding: 24px 14px 35px;
-  background: linear-gradient(
-    180deg,
-    #f7f9fc 0%,
-    #eef2f7 100%
-  );
-}
-
-.brand {
-  width: 100%;
-  max-width: 520px;
-  margin: 0 auto 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-mark {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: #111827;
-  color: white;
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.festival-name {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: .08em;
-}
-
-.system-name {
-  margin-top: 3px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .12em;
-  color: #6b7280;
-}
-
-.registration-card {
-  width: 100%;
-  max-width: 520px;
-  margin: auto;
-  background: white;
-  border-radius: 20px;
-  padding: 28px 22px 22px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 10px 30px rgba(15,23,42,.08);
-}
-
-.setup-icon {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  background: #eef4ff;
-  font-size: 24px;
-  margin-bottom: 18px;
-}
-
-.eyebrow {
-  color: #2563eb;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  margin-bottom: 8px;
-}
-
-.registration-card h1 {
-  margin: 0;
-  font-size: 30px;
-  line-height: 1.15;
-}
-
-.intro {
-  margin: 10px 0 24px;
-  font-size: 15px;
-  line-height: 1.55;
-  color: #6b7280;
-}
-
-.form-group {
-  margin-bottom: 18px;
-}
-
-.form-group label {
-  margin: 0 0 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .08em;
-  color: #374151;
-}
-
-.input-wrapper {
-  position: relative;
-}
-
-.input-wrapper input {
-  height: 54px;
-  padding-right: 48px;
-}
-
-.input-icon {
-  position: absolute;
-  left: 15px;
-  top: 17px;
-  pointer-events: none;
-  opacity: .7;
-}
-
-.input-wrapper input.with-icon {
-  padding-left: 45px;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 6px;
-  top: 6px;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  font-size: 17px;
-  opacity: .65;
-}
-
-.security-note {
-  display: flex;
-  gap: 11px;
-  margin: 8px 0 20px;
-  padding: 13px;
-  border-radius: 11px;
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-}
-
-.security-check {
-  flex-shrink: 0;
-  width: 23px;
-  height: 23px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #dcfce7;
-  color: #15803d;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.security-note strong {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 2px;
-}
-
-.security-note span {
-  display: block;
-  font-size: 12px;
-  line-height: 1.4;
-  color: #6b7280;
-}
-
-.register-button {
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: #2563eb;
-  color: white;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: .02em;
-  box-shadow: 0 4px 10px rgba(37,99,235,.20);
-}
-
-.registration-error {
-  display: none;
-  margin-top: 14px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.registration-error.visible {
-  display: block;
-}
-
-.setup-footer {
-  margin-top: 20px;
-  color: #9ca3af;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-align: center;
-}
-
-
-/* =========================================================
-   CAMERA HELP
-   ========================================================= */
-
-.camera-help {
-  margin-top: 20px;
-  padding: 16px;
-  background: #f1f5fe;
-  border: 1px solid #d2e3fc;
-  border-radius: 12px;
-}
-
-.camera-help-title {
-  font-size: 17px;
-  font-weight: bold;
-  color: #174ea6;
-}
-
-.camera-help-text {
-  margin-top: 6px;
-  color: #666;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.camera-help details {
-  margin-top: 12px;
-}
-
-.camera-help summary {
-  color: #1a73e8;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.help-content {
-  margin-top: 15px;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.help-content li {
-  margin-bottom: 8px;
-}
-
-
-/* =========================================================
-   CAMERA
-   ========================================================= */
-
-#reader {
-  width: 100%;
-  margin-top: 20px;
-  overflow: hidden;
-  border-radius: 15px;
-}
-
-.camera-status {
-  margin-top: 15px;
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-}
-
-
-/* =========================================================
-   RESULTS
-   ========================================================= */
-
-.result {
-  text-align: center;
-  padding: 35px 20px;
-}
-
-.valid {
-  border-top: 12px solid #188038;
-}
-
-.invalid {
-  border-top: 12px solid #d93025;
-}
-
-.warning {
-  border-top: 12px solid #f29900;
-}
-
-.result-title {
-  font-size: 31px;
-  font-weight: bold;
-  line-height: 1.15;
-}
-
-.valid .result-title,
-.valid .entry {
-  color: #188038;
-}
-
-.invalid .result-title,
-.invalid .entry {
-  color: #d93025;
-}
-
-.warning .result-title,
-.warning .entry {
-  color: #f29900;
-}
-
-.ticket-id {
-  margin-top: 25px;
-  font-size: 19px;
-  font-weight: bold;
-  word-break: break-all;
-}
-
-.entry {
-  margin-top: 25px;
-  font-size: 27px;
-  font-weight: bold;
-}
-
-.message {
-  margin-top: 15px;
-  color: #666;
-  line-height: 1.5;
-}
-
-
-/* =========================================================
-   SYSTEM ERROR
-   ========================================================= */
-
-.error-card {
-  border-top: 10px solid #f29900;
-  text-align: center;
-}
-
-.error-icon {
-  font-size: 45px;
-  margin-bottom: 10px;
-}
-
-.error-card h2 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.error-card p {
-  color: #666;
-  line-height: 1.5;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-  .page {
-    padding: 12px;
-  }
-
-  .registration-page {
-    padding: 20px 12px 30px;
-  }
-
-  .registration-card {
-    padding: 25px 18px 20px;
-  }
-
-  .registration-card h1 {
-    font-size: 27px;
-  }
-
-  .result-title {
-    font-size: 27px;
-  }
-}
-
-
-/* Scanner button state */
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Ticket Scanner</title>
+
+  <!-- QR scanner library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      background: #f4f6f8;
+      color: #202124;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 24px 16px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 32px 28px;
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* -----------------------------------------
+       HEADINGS
+       ----------------------------------------- */
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+    }
+
+    h2 {
+      margin: 10px 0;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    p {
+      line-height: 1.5;
+    }
+
+    .subtitle {
+      margin: 0 0 30px;
+      color: #6b6f75;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    /* -----------------------------------------
+       READY STATUS
+       ----------------------------------------- */
+
+    .ready {
+      color: #07883b;
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .ready::first-letter {
+      font-size: 24px;
+    }
+
+    .scanner-info {
+      color: #6b6f75;
+      font-size: 18px;
+      margin: 0 0 28px;
+    }
+
+    /* -----------------------------------------
+       BUTTONS
+       ----------------------------------------- */
+
+    .primary-button {
+      width: 100%;
+      min-height: 64px;
+      padding: 16px 20px;
+      border-radius: 18px;
+      background: #087ff5;
+      color: white;
+      font-size: 21px;
+      font-weight: 700;
+      transition:
+        transform 0.1s ease,
+        background 0.2s ease;
+    }
+
+    .primary-button:active {
+      transform: scale(0.98);
+      background: #066bd0;
+    }
+
+    .secondary-button {
+      width: 100%;
+      min-height: 60px;
+      padding: 14px 20px;
+      border-radius: 18px;
+      background: #eeeeee;
+      color: #202124;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .secondary-button:active {
+      transform: scale(0.98);
+    }
+
+    .danger-button {
+      width: 100%;
+      min-height: 58px;
+      padding: 14px 20px;
+      border-radius: 18px;
+      background: #eeeeee;
+      color: #333333;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* -----------------------------------------
+       CAMERA HELP
+       ----------------------------------------- */
+
+    .permission-box {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      background: #eef5ff;
+      border: 1px solid #cfe1ff;
+    }
+
+    .permission-title {
+      color: #0759a5;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .permission-box p {
+      margin: 6px 0;
+      color: #64686d;
+      font-size: 17px;
+    }
+
+    details {
+      margin-top: 12px;
+    }
+
+    summary {
+      color: #0875d1;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+
+    .permission-steps {
+      margin-top: 14px;
+      padding-left: 22px;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* -----------------------------------------
+       REGISTRATION
+       ----------------------------------------- */
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 58px;
+      padding: 14px 16px;
+      border: 1px solid #c9cdd2;
+      border-radius: 15px;
+      outline: none;
+      font-size: 18px;
+      color: #202124;
+      background: #fff;
+    }
+
+    .input:focus {
+      border-color: #087ff5;
+      box-shadow: 0 0 0 3px rgba(8, 127, 245, 0.12);
+    }
+
+    .registration-note {
+      margin-top: 18px;
+      color: #70757a;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* -----------------------------------------
+       SCANNER
+       ----------------------------------------- */
+
+    .scanner-card {
+      padding: 26px 20px 24px;
+    }
+
+    .scanner-header {
+      padding: 4px 4px 18px;
+    }
+
+    .scanner-header h1 {
+      font-size: 36px;
+    }
+
+    #qr-reader {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #111;
+    }
+
+    #qr-reader video {
+      width: 100% !important;
+      height: auto !important;
+      border-radius: 20px;
+      display: block;
+    }
+
+    /*
+      html5-qrcode can create its own UI.
+      We hide unnecessary text/buttons generated by it.
+    */
+
+    #qr-reader__dashboard_section_csr {
+      display: none !important;
+    }
+
+    #qr-reader__dashboard_section_swaplink {
+      display: none !important;
+    }
+
+    #qr-reader__scan_region {
+      min-height: 280px;
+    }
+
+    .scanner-help {
+      text-align: center;
+      margin: 18px 0;
+      color: #666;
+      font-size: 17px;
+    }
+
+    /* -----------------------------------------
+       CHECKING
+       ----------------------------------------- */
+
+    .checking-card {
+      text-align: center;
+      padding: 60px 25px;
+    }
+
+    .spinner {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 25px;
+      border: 7px solid #e0e0e0;
+      border-top-color: #087ff5;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .checking-card h2 {
+      font-size: 25px;
+    }
+
+    .checking-card p {
+      color: #70757a;
+      font-size: 17px;
+    }
+
+    /* -----------------------------------------
+       RESULT CARDS
+       ----------------------------------------- */
+
+    .result-card {
+      text-align: center;
+      border-top: 10px solid;
+      padding-top: 35px;
+    }
+
+    .result-valid {
+      border-color: #0a9f4b;
+    }
+
+    .result-invalid {
+      border-color: #e11d2e;
+    }
+
+    .result-error {
+      border-color: #f39c12;
+    }
+
+    .result-icon {
+      font-size: 68px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 15px;
+    }
+
+    .result-valid .result-icon {
+      color: #0a9f4b;
+    }
+
+    .result-invalid .result-icon {
+      color: #e11d2e;
+    }
+
+    .result-error .result-icon {
+      color: #f39c12;
+    }
+
+    .result-title {
+      font-size: 34px;
+      font-weight: 800;
+      margin-bottom: 25px;
+    }
+
+    .result-valid .result-title {
+      color: #087f3d;
+    }
+
+    .result-invalid .result-title {
+      color: #d7192e;
+    }
+
+    .result-error .result-title {
+      color: #d98900;
+    }
+
+    .ticket-id {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 18px 0 28px;
+      word-break: break-word;
+    }
+
+    .entry-status {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .result-message {
+      color: #6b6f75;
+      font-size: 19px;
+      margin: 0 0 30px;
+    }
+
+    /* -----------------------------------------
+       SMALL TEXT
+       ----------------------------------------- */
+
+    .small {
+      color: #70757a;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .error-message {
+      color: #666;
+      font-size: 17px;
+      line-height: 1.5;
+      word-break: break-word;
+      margin: 20px 0 28px;
+    }
+
+    /* -----------------------------------------
+       SPACING
+       ----------------------------------------- */
+
+    .button-gap {
+      margin-top: 14px;
+    }
+
+    .top-gap {
+      margin-top: 25px;
+    }
+
+    /* -----------------------------------------
+       MOBILE
+       ----------------------------------------- */
+
+    @media (max-width: 600px) {
+
+      .page {
+        padding: 14px 10px 30px;
+      }
+
+      .card {
+        padding: 28px 20px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .primary-button {
+        min-height: 62px;
+        font-size: 20px;
+      }
+
+      .result-title {
+        font-size: 31px;
+      }
+
+      .entry-status {
+        font-size: 25px;
+      }
+
+      #qr-reader__scan_region {
+        min-height: 250px;
+      }
+    }
+
+  </style>
 </head>
-
 
 <body>
 
-<div class="page">
-
-  <!-- LOADING -->
-  <div id="loading" class="card loading">
-    <div class="loading-spinner"></div>
-    <strong id="loadingText">Checking scanner...</strong>
-  </div>
-
-
-  <!-- REGISTRATION -->
-  <div id="registration"
-       class="registration-page hidden">
-
-    <div class="brand">
-      <div class="brand-mark">✓</div>
-      <div>
-        <div class="festival-name">
-          THALAPPAVU 2026
-        </div>
-        <div class="system-name">
-          TICKET VERIFICATION
-        </div>
-      </div>
-    </div>
-
-    <div class="registration-card">
-
-      <div class="setup-icon">🔐</div>
-
-      <div class="eyebrow">
-        SCANNER SETUP
-      </div>
-
-      <h1>Register this scanner</h1>
-
-      <p class="intro">
-        Authorize this browser on this phone to
-        validate tickets at the event entrance.
-      </p>
-
-      <div class="form-group">
-        <label for="deviceName">
-          SCANNER NAME
-        </label>
-
-        <div class="input-wrapper">
-          <span class="input-icon">📱</span>
-
-          <input
-            id="deviceName"
-            class="with-icon"
-            type="text"
-            placeholder="e.g. Main Gate 1"
-            autocomplete="off">
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <label for="registrationCode">
-          REGISTRATION CODE
-        </label>
-
-        <div class="input-wrapper">
-          <span class="input-icon">🔑</span>
-
-          <input
-            id="registrationCode"
-            class="with-icon"
-            type="password"
-            placeholder="Enter registration code"
-            autocomplete="off">
-
-          <button
-            type="button"
-            class="password-toggle"
-            onclick="toggleRegistrationCode()"
-            aria-label="Show registration code">
-            👁
-          </button>
-        </div>
-      </div>
-
-
-      <div class="security-note">
-        <div class="security-check">✓</div>
-        <div>
-          <strong>Authorized scanner</strong>
-          <span>
-            This browser will receive a private scanner
-            token used for ticket validation.
-          </span>
-        </div>
-      </div>
-
-
-      <button
-        id="registerButton"
-        class="register-button"
-        onclick="registerScanner()">
-
-        <span>REGISTER THIS SCANNER</span>
-        <span>→</span>
-      </button>
-
-
-      <div id="registrationError"
-           class="registration-error">
-      </div>
-
-
-      <div class="setup-footer">
-        ONE-TIME SETUP • KEEP THIS PHONE AT THE ENTRANCE
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- READY -->
-  <div id="scanner" class="card hidden">
-
-    <div class="ready">
-      ● READY
-    </div>
-
-    <h1>Ticket Scanner</h1>
-
-    <div id="deviceInfo" class="device"></div>
-
-    <button id="scanTicketButton"
-            type="button"
-            class="primary"
-            onclick="void startCamera()">
-      📷 SCAN TICKET
-    </button>
-
-
-    <div class="camera-help">
-
-      <div class="camera-help-title">
-        📷 Camera permission
-      </div>
-
-      <div class="camera-help-text">
-        Camera access is required to scan tickets.
-      </div>
-
-      <details>
-        <summary>
-          How to allow camera access
-        </summary>
-
-        <div class="help-content">
-
-          <strong>Android / Chrome</strong>
-
-          <ol>
-            <li>
-              Tap <b>SCAN TICKET</b>.
-            </li>
-
-            <li>
-              If Chrome asks for camera permission,
-              tap <b>Allow</b>.
-            </li>
-
-            <li>
-              If no permission prompt appears,
-              tap the site/settings icon beside the
-              website address.
-            </li>
-
-            <li>
-              Open <b>Permissions → Camera</b>
-              and select <b>Allow</b>.
-            </li>
-
-            <li>
-              Return to this page and tap
-              <b>SCAN TICKET</b> again.
-            </li>
-          </ol>
-
-
-          <strong>iPhone / Safari</strong>
-
-          <ol>
-            <li>
-              Tap <b>SCAN TICKET</b>.
-            </li>
-
-            <li>
-              Tap <b>Allow</b> when Safari asks.
-            </li>
-
-            <li>
-              If access was blocked, open
-              <b>Settings → Safari → Camera</b>
-              and allow camera access.
-            </li>
-          </ol>
-
-        </div>
-      </details>
-
-    </div>
-
-
-    <button class="secondary"
-            onclick="unregisterScanner()">
-      Unregister this scanner
-    </button>
-
-  </div>
-
-
-  <!-- CAMERA -->
-  <div id="camera" class="card hidden">
-
-    <h1>Scan Ticket</h1>
-
-    <div class="sub">
-      Point the camera at the QR code printed on
-      the ticket.
-    </div>
-
-    <div id="reader"></div>
-
-    <div id="cameraStatus"
-         class="camera-status">
-      Starting camera...
-    </div>
-
-    <button class="secondary"
-            onclick="stopCamera()">
-      CANCEL
-    </button>
-
-  </div>
-
-
-  <!-- RESULT -->
-  <div id="result"
-       class="card result hidden">
-
-    <div id="resultTitle"
-         class="result-title">
-    </div>
-
-    <div id="resultTicket"
-         class="ticket-id">
-    </div>
-
-    <div id="resultEntry"
-         class="entry">
-    </div>
-
-    <div id="resultMessage"
-         class="message">
-    </div>
-
-    <button class="primary"
-            onclick="nextTicket()">
-      SCAN NEXT TICKET
-    </button>
-
-  </div>
-
-
-  <!-- SYSTEM ERROR -->
-  <div id="systemError"
-       class="card error-card hidden">
-
-    <div class="error-icon">⚠️</div>
-
-    <h2>System error</h2>
-
-    <p id="systemErrorMessage">
-      Please try again.
-    </p>
-
-    <button class="primary"
-            onclick="retryCurrentOperation()">
-      TRY AGAIN
-    </button>
-
-  </div>
-
-</div>
+<div id="app"></div>
 
 
 <script>
 
-/* =========================================================
+/* ============================================================
    CONFIGURATION
-   ========================================================= */
+   ============================================================
 
-/*
- * KEEP THIS URL PERMANENT.
- *
- * When Apps Script code changes:
- * Deploy → Manage deployments
- * → Edit existing deployment
- * → New version → Deploy
- *
- * Do NOT create a new deployment.
- */
+   IMPORTANT:
 
-const BACKEND_URL =
-  'https://script.google.com/macros/s/AKfycbyTVy6vn2zxI8Aeqm5uLGmdf5wY34Js-I_Zpfa1XxgZaluVDXgExmHk6evCM798Ap-w/exec';
+   Put your STABLE Apps Script API/Web App URL here.
+
+   Example:
+
+   https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+
+   Your printed QR codes should NOT contain this URL.
+
+   They should contain only the Ticket ID or a deployment-
+   independent ticket validation URL.
+
+   ============================================================ */
+
+const CONFIG = {
+
+  API_URL:
+    "https://script.google.com/macros/s/AKfycbyTVy6vn2zxI8Aeqm5uLGmdf5wY34Js-I_Zpfa1XxgZaluVDXgExmHk6evCM798Ap-w/exec",
+
+  CAMERA_START_DELAY: 400,
+
+  VALIDATION_TIMEOUT: 15000
+
+};
 
 
-const DEVICE_KEY =
-  'thalappavu_device_id';
-
-const TOKEN_KEY =
-  'thalappavu_device_token';
-
+/* ============================================================
+   APPLICATION STATE
+   ============================================================ */
 
 let scanner = null;
-let scanning = false;
-let scannerStartPromise = null;
-let currentOperation = null;
 
-/*
- * Ticket that produced the current result.
- * When "SCAN NEXT TICKET" is pressed, the scanner will ignore
- * this same QR while it is still in front of the camera.
- */
-let lastScannedTicketId = null;
+let scannerRunning = false;
 
+let scanInProgress = false;
 
-/* =========================================================
-   UI
-   ========================================================= */
+let validationInProgress = false;
 
-function show(id) {
+let cameraStarting = false;
 
-  [
-    'loading',
-    'registration',
-    'scanner',
-    'camera',
-    'result',
-    'systemError'
-  ].forEach(function(item) {
-
-    document
-      .getElementById(item)
-      .classList.add('hidden');
-
-  });
-
-  document
-    .getElementById(id)
-    .classList.remove('hidden');
-}
+let currentStream = null;
 
 
-function setLoading(text) {
-  document.getElementById('loadingText')
-    .textContent = text || 'Loading...';
+/* ============================================================
+   LOCAL STORAGE
+   ============================================================ */
 
-  show('loading');
-}
+const STORAGE_KEYS = {
+
+  scannerId: "ticket_scanner_id",
+
+  scannerName: "ticket_scanner_name",
+
+  registered: "ticket_scanner_registered"
+
+};
 
 
-/* =========================================================
-   START
-   ========================================================= */
+/* ============================================================
+   APP INITIALIZATION
+   ============================================================ */
 
-function start() {
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
 
-  const deviceId =
-    localStorage.getItem(DEVICE_KEY);
+    initializeApp();
 
-  const token =
-    localStorage.getItem(TOKEN_KEY);
+  }
+);
 
-  if (!deviceId || !token) {
-    show('registration');
+
+function initializeApp() {
+
+  if (
+    CONFIG.API_URL.includes("PASTE_YOUR") ||
+    !CONFIG.API_URL
+  ) {
+
+    showConfigurationError();
+
     return;
   }
 
-  currentOperation = 'checkDevice';
-
-  setLoading('Checking scanner...');
-
-  apiGet(
-    'checkDevice',
-    {
-      deviceId: deviceId,
-      token: token
-    },
-    function(result) {
-
-      if (result && result.authorized) {
-
-        document
-          .getElementById('deviceInfo')
-          .textContent =
-            result.deviceName +
-            ' • ' +
-            result.deviceId;
-
-        /*
-         * Always enter the READY screen after authentication.
-         * This prevents a restored result screen from remaining
-         * visible when the scanner URL is reopened.
-         */
-        show('scanner');
-        return;
-      }
-
-      localStorage.removeItem(DEVICE_KEY);
-      localStorage.removeItem(TOKEN_KEY);
-
-      show('registration');
-
-      showRegistrationError(
-        result && result.message
-          ? result.message
-          : 'Scanner authorization failed.'
-      );
-    }
-  );
-}
-
-
-/* =========================================================
-   REGISTRATION
-   ========================================================= */
-
-function toggleRegistrationCode() {
-
-  const input =
-    document.getElementById(
-      'registrationCode'
+  const registered =
+    localStorage.getItem(
+      STORAGE_KEYS.registered
     );
 
-  input.type =
-    input.type === 'password'
-      ? 'text'
-      : 'password';
-}
-
-
-function showRegistrationError(message) {
-
-  const box =
-    document.getElementById(
-      'registrationError'
+  const scannerId =
+    localStorage.getItem(
+      STORAGE_KEYS.scannerId
     );
 
-  box.textContent = message || '';
-  box.classList.toggle(
-    'visible',
-    Boolean(message)
-  );
-}
+  if (
+    registered === "true" &&
+    scannerId
+  ) {
 
+    showReadyScreen();
 
-function registerScanner() {
+  } else {
 
-  const name =
-    document.getElementById(
-      'deviceName'
-    ).value.trim();
+    showRegistrationScreen();
 
-  const code =
-    document.getElementById(
-      'registrationCode'
-    ).value.trim();
-
-  showRegistrationError('');
-
-  if (!name || !code) {
-
-    showRegistrationError(
-      'Enter both the scanner name and registration code.'
-    );
-
-    return;
   }
+
+}
+
+
+/* ============================================================
+   REGISTRATION SCREEN
+   ============================================================ */
+
+function showRegistrationScreen() {
+
+  stopAndDestroyScanner();
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card">
+
+          <h1>Register Scanner</h1>
+
+          <p class="subtitle">
+            Register this phone as an
+            authorized event scanner.
+          </p>
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="scannerName">
+
+              Scanner name
+
+            </label>
+
+            <input
+              id="scannerName"
+              class="input"
+              type="text"
+              placeholder="Main Gate 1"
+              autocomplete="off"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label
+              class="form-label"
+              for="registrationCode">
+
+              Registration code
+
+            </label>
+
+            <input
+              id="registrationCode"
+              class="input"
+              type="password"
+              placeholder="Registration code"
+              autocomplete="off"
+            >
+
+          </div>
+
+          <button
+            id="registerButton"
+            class="primary-button"
+            onclick="registerScanner()">
+
+            REGISTER THIS PHONE
+
+          </button>
+
+          <div
+            id="registrationMessage"
+            class="registration-note">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   REGISTER PHONE
+   ============================================================ */
+
+async function registerScanner() {
+
+  const nameElement =
+    document.getElementById("scannerName");
+
+  const codeElement =
+    document.getElementById("registrationCode");
 
   const button =
-    document.getElementById(
-      'registerButton'
-    );
+    document.getElementById("registerButton");
+
+  const message =
+    document.getElementById("registrationMessage");
+
+  const scannerName =
+    nameElement.value.trim();
+
+  const registrationCode =
+    codeElement.value.trim();
+
+
+  if (!scannerName) {
+
+    message.textContent =
+      "Please enter a scanner name.";
+
+    return;
+
+  }
+
+
+  if (!registrationCode) {
+
+    message.textContent =
+      "Please enter the registration code.";
+
+    return;
+
+  }
+
 
   button.disabled = true;
-  button.innerHTML =
-    '<span>REGISTERING...</span>';
 
-  currentOperation = 'registerDevice';
+  button.textContent =
+    "REGISTERING...";
 
-  apiGet(
-    'registerDevice',
-    {
-      deviceName: name,
-      registrationCode: code
-    },
-    function(result) {
+  message.textContent =
+    "Registering this phone...";
 
-      button.disabled = false;
-      button.innerHTML =
-        '<span>REGISTER THIS SCANNER</span><span>→</span>';
-
-      if (!result || !result.success) {
-
-        showRegistrationError(
-          result && result.message
-            ? result.message
-            : 'Registration failed. Please try again.'
-        );
-
-        return;
-      }
-
-      /*
-       * Store the private scanner credentials locally.
-       * They are never displayed after registration.
-       */
-
-      localStorage.setItem(
-        DEVICE_KEY,
-        result.deviceId
-      );
-
-      localStorage.setItem(
-        TOKEN_KEY,
-        result.token
-      );
-
-      document
-        .getElementById('deviceInfo')
-        .textContent =
-          result.deviceName +
-          ' • ' +
-          result.deviceId;
-
-      show('scanner');
-    }
-  );
-}
-
-
-/* =========================================================
-   CAMERA
-   ========================================================= */
-
-async function startCamera() {
-
-  /*
-   * Always clean up any previous scanner instance before
-   * starting a new session.
-   */
-  if (scanner || scanning || scannerStartPromise) {
-    await destroyScanner();
-  }
-
-  show('camera');
-
-  const reader =
-    document.getElementById('reader');
-
-  const status =
-    document.getElementById('cameraStatus');
-
-  const scanButton =
-    document.getElementById('scanTicketButton');
-
-  if (!reader || !status) {
-    showSystemError(
-      'Scanner interface could not be initialized.'
-    );
-    return;
-  }
-
-  reader.innerHTML = '';
-
-  status.textContent =
-    'Starting camera...';
-
-  if (scanButton) {
-    scanButton.disabled = true;
-  }
 
   try {
 
-    /*
-     * Get the actual cameras first.
-     *
-     * This is the recommended html5-qrcode approach and
-     * gives us a concrete camera device ID to start.
-     */
-    const cameras =
-      await Html5Qrcode.getCameras();
-
-    if (!cameras || !cameras.length) {
-      throw new Error(
-        'No camera was found on this device.'
-      );
-    }
-
-    /*
-     * Prefer a rear/environment camera.
-     *
-     * Android Chrome normally exposes labels such as:
-     * "back camera", "rear camera", etc.
-     *
-     * If the label is unavailable, fall back to the
-     * first camera.
-     */
-    const rearCamera =
-      cameras.find(function(camera) {
-
-        const label =
-          String(camera.label || '')
-            .toLowerCase();
-
-        return (
-          label.includes('back') ||
-          label.includes('rear') ||
-          label.includes('environment')
-        );
-
-      });
-
-    const cameraId =
-      rearCamera
-        ? rearCamera.id
-        : cameras[0].id;
-
-    scanner =
-      new Html5Qrcode('reader');
-
-    scannerStartPromise =
-      scanner.start(
-
-        /*
-         * Use the actual device ID rather than
-         * facingMode. This is more deterministic.
-         */
-        cameraId,
-
+    const result =
+      await callApi(
+        "registerScanner",
         {
-          fps: 10,
+          scannerName:
+            scannerName,
 
-          qrbox: function(
-            viewfinderWidth,
-            viewfinderHeight
-          ) {
-
-            const size =
-              Math.min(
-                280,
-                Math.floor(
-                  Math.min(
-                    viewfinderWidth,
-                    viewfinderHeight
-                  ) * 0.72
-                )
-              );
-
-            return {
-              width: size,
-              height: size
-            };
-          },
-
-          aspectRatio: 1.0
-        },
-
-        function(decodedText) {
-
-          if (!scanning) {
-            return;
-          }
-
-          const ticketId =
-            String(decodedText || '')
-              .trim()
-              .toUpperCase();
-
-          if (!ticketId) {
-            return;
-          }
-
-          /*
-           * If the operator presses Scan Next while the
-           * previous ticket is still in front of the camera,
-           * don't immediately validate that same ticket.
-           */
-          if (
-            lastScannedTicketId &&
-            ticketId === lastScannedTicketId
-          ) {
-
-            status.textContent =
-              'Please present the next ticket.';
-
-            return;
-          }
-
-          scanning = false;
-
-          lastScannedTicketId =
-            ticketId;
-
-          handleDecodedTicket(ticketId);
-        },
-
-        function() {
-          /*
-           * Normal: QR not detected in this frame.
-           */
+          registrationCode:
+            registrationCode
         }
       );
 
-    await scannerStartPromise;
 
-    scannerStartPromise = null;
-    scanning = true;
+    if (
+      result &&
+      result.success
+    ) {
 
-    status.textContent =
-      'Point the camera at the QR code.';
+      const scannerId =
+        result.scannerId ||
+        result.deviceId;
+
+
+      if (!scannerId) {
+
+        throw new Error(
+          "The server did not return a scanner ID."
+        );
+
+      }
+
+
+      localStorage.setItem(
+        STORAGE_KEYS.scannerId,
+        scannerId
+      );
+
+      localStorage.setItem(
+        STORAGE_KEYS.scannerName,
+        scannerName
+      );
+
+      localStorage.setItem(
+        STORAGE_KEYS.registered,
+        "true"
+      );
+
+
+      showReadyScreen();
+
+      return;
+
+    }
+
+
+    throw new Error(
+      result &&
+      result.message
+        ? result.message
+        : "Registration failed."
+    );
+
 
   } catch (error) {
 
-    scannerStartPromise = null;
-    scanning = false;
+    console.error(
+      "Registration error:",
+      error
+    );
 
-    await destroyScanner();
+    message.textContent =
+      error.message ||
+      "Registration failed.";
 
-    showCameraError(error);
+    button.disabled = false;
 
-  } finally {
+    button.textContent =
+      "REGISTER THIS PHONE";
 
-    if (scanButton) {
-      scanButton.disabled = false;
-    }
   }
+
 }
 
 
-/*
- * Called immediately after a QR is decoded.
- *
- * The camera is stopped BEFORE the ticket request is sent.
- * This is important: the browser must completely release
- * the camera before the next scan begins.
- */
-async function handleDecodedTicket(decodedText) {
+/* ============================================================
+   READY SCREEN
+   ============================================================ */
+
+function showReadyScreen() {
+
+  stopAndDestroyScanner();
+
+  const scannerName =
+    localStorage.getItem(
+      STORAGE_KEYS.scannerName
+    ) ||
+    "Event Scanner";
+
+  const scannerId =
+    localStorage.getItem(
+      STORAGE_KEYS.scannerId
+    ) ||
+    "";
+
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card">
+
+          <div class="ready">
+            ● READY
+          </div>
+
+          <h1>
+            Ticket Scanner
+          </h1>
+
+          <p class="scanner-info">
+            ${escapeHtml(scannerName)}
+            ${scannerId
+              ? " • " + escapeHtml(scannerId)
+              : ""}
+          </p>
+
+
+          <button
+            class="primary-button"
+            onclick="startScanner()">
+
+            📷 SCAN TICKET
+
+          </button>
+
+
+          <div class="permission-box">
+
+            <div class="permission-title">
+              📷 Camera permission
+            </div>
+
+            <p>
+              Camera access is required
+              to scan tickets.
+            </p>
+
+            <details>
+
+              <summary>
+                How to allow camera access
+              </summary>
+
+              <ol class="permission-steps">
+
+                <li>
+                  Tap the site settings icon
+                  beside the website address.
+                </li>
+
+                <li>
+                  Open
+                  <strong>Permissions</strong>.
+                </li>
+
+                <li>
+                  Select
+                  <strong>Camera</strong>.
+                </li>
+
+                <li>
+                  Select
+                  <strong>Allow</strong>.
+                </li>
+
+                <li>
+                  Return to this page and tap
+                  <strong>SCAN TICKET</strong>.
+                </li>
+
+              </ol>
+
+            </details>
+
+          </div>
+
+
+          <div class="top-gap">
+
+            <button
+              class="danger-button"
+              onclick="unregisterScanner()">
+
+              Unregister this scanner
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   START SCANNER
+   ============================================================ */
+
+async function startScanner() {
+
+  if (scannerRunning || cameraStarting) {
+
+    console.log(
+      "Scanner already running."
+    );
+
+    return;
+
+  }
+
+
+  if (scanInProgress) {
+
+    console.log(
+      "Scan already in progress."
+    );
+
+    return;
+
+  }
+
+
+  cameraStarting = true;
+
+  scanInProgress = true;
+
+
+  /*
+   * VERY IMPORTANT:
+   *
+   * Destroy the previous scanner before
+   * creating another one.
+   *
+   * This fixes the Android second-scan
+   * problem.
+   */
+
+  await stopAndDestroyScanner();
+
+
+  renderScannerScreen();
+
+
+  /*
+   * Give the browser time to create
+   * the #qr-reader element.
+   */
+
+  await sleep(
+    CONFIG.CAMERA_START_DELAY
+  );
+
 
   try {
 
-    await stopScannerOnly();
+    scanner =
+      new Html5Qrcode(
+        "qr-reader"
+      );
 
-  } catch (e) {
+
     /*
-     * Even if stopping reports an error, continue with
-     * ticket validation. The validation itself is server-side.
+     * Start a completely fresh camera.
      */
+
+    await scanner.start(
+
+      {
+        facingMode: "environment"
+      },
+
+      {
+
+        fps: 10,
+
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+          const size =
+            Math.min(
+              viewfinderWidth,
+              viewfinderHeight
+            ) * 0.70;
+
+          return {
+            width: Math.floor(size),
+            height: Math.floor(size)
+          };
+
+        },
+
+        aspectRatio: 1.0,
+
+        disableFlip: false
+
+      },
+
+      function(decodedText) {
+
+        handleQrDetected(
+          decodedText
+        );
+
+      },
+
+      function(errorMessage) {
+
+        /*
+         * This is normal.
+         *
+         * html5-qrcode reports a scan
+         * failure every time it doesn't
+         * find a QR code in a frame.
+         *
+         * Do not display these errors.
+         */
+
+      }
+
+    );
+
+
+    scannerRunning = true;
+
+    cameraStarting = false;
+
+    console.log(
+      "Camera started successfully."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Camera start failed:",
+      error
+    );
+
+    scannerRunning = false;
+
+    cameraStarting = false;
+
+    scanInProgress = false;
+
+    await stopAndDestroyScanner();
+
+    showCameraError(
+      error
+    );
+
   }
 
-  validateTicket(decodedText);
 }
 
 
-/*
- * Stop the current Html5Qrcode instance and release
- * the camera. Does not change the visible page.
- */
-async function stopScannerOnly() {
+/* ============================================================
+   QR DETECTED
+   ============================================================ */
 
-  scanning = false;
+async function handleQrDetected(
+  decodedText
+) {
 
   /*
-   * If start() is still in progress, wait for it to finish.
+   * Prevent the same QR code from
+   * triggering multiple times.
    */
-  if (scannerStartPromise) {
 
-    try {
-      await scannerStartPromise;
-    } catch (e) {
-      scannerStartPromise = null;
-    }
+  if (
+    validationInProgress ||
+    !scanInProgress
+  ) {
+
+    return;
+
   }
+
+
+  validationInProgress = true;
+
+  scanInProgress = false;
+
+
+  const ticketValue =
+    String(decodedText || "")
+      .trim();
+
+
+  console.log(
+    "QR detected:",
+    ticketValue
+  );
+
+
+  /*
+   * STOP CAMERA IMMEDIATELY.
+   */
+
+  await stopAndDestroyScanner();
+
+
+  /*
+   * Now validate.
+   */
+
+  await validateTicket(
+    ticketValue
+  );
+
+}
+
+
+/* ============================================================
+   STOP + DESTROY CAMERA
+   ============================================================ */
+
+async function stopAndDestroyScanner() {
+
+  scannerRunning = false;
+
 
   if (!scanner) {
+
+    /*
+     * Also stop any camera tracks
+     * that may still exist.
+     */
+
+    stopMediaTracks();
+
     return;
+
   }
 
-  const currentScanner = scanner;
-
-  scanner = null;
 
   try {
 
     if (
-      typeof currentScanner.isScanning !== 'undefined'
-        ? currentScanner.isScanning
-        : true
+      scanner.isScanning
     ) {
-      await currentScanner.stop();
+
+      await scanner.stop();
+
     }
 
-  } catch (e) {
+  } catch (error) {
 
-    /*
-     * Some versions throw if stop() is called after the
-     * scanner has already stopped. Continue cleanup.
-     */
+    console.warn(
+      "Scanner stop:",
+      error
+    );
 
   }
 
+
   try {
-    currentScanner.clear();
-  } catch (e) {}
+
+    await scanner.clear();
+
+  } catch (error) {
+
+    console.warn(
+      "Scanner clear:",
+      error
+    );
+
+  }
+
+
+  scanner = null;
+
+
+  stopMediaTracks();
+
+
+  /*
+   * Android Chrome sometimes needs
+   * a short delay before releasing
+   * the camera completely.
+   */
+
+  await sleep(250);
 
 }
 
 
-/*
- * Complete scanner cleanup.
- */
-async function destroyScanner() {
+/* ============================================================
+   STOP MEDIA STREAMS
+   ============================================================ */
+
+function stopMediaTracks() {
 
   try {
-    await stopScannerOnly();
-  } catch (e) {}
 
-  const reader =
-    document.getElementById('reader');
+    if (currentStream) {
 
-  if (reader) {
-    reader.innerHTML = '';
+      currentStream
+        .getTracks()
+        .forEach(
+          function(track) {
+
+            track.stop();
+
+          }
+        );
+
+      currentStream = null;
+
+    }
+
+
+    const videos =
+      document.querySelectorAll(
+        "#qr-reader video"
+      );
+
+
+    videos.forEach(
+      function(video) {
+
+        if (
+          video.srcObject
+        ) {
+
+          const stream =
+            video.srcObject;
+
+          stream
+            .getTracks()
+            .forEach(
+              function(track) {
+
+                track.stop();
+
+              }
+            );
+
+          video.srcObject = null;
+
+        }
+
+      }
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Media cleanup:",
+      error
+    );
+
   }
+
 }
 
 
-/* =========================================================
-   CAMERA ERROR
-   ========================================================= */
+/* ============================================================
+   SCANNER SCREEN
+   ============================================================ */
 
-function showCameraError(error) {
+function renderScannerScreen() {
 
-  scanning = false;
+  document.getElementById("app").innerHTML = `
 
-  let message =
-    'The scanner could not access the camera.';
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card scanner-card">
+
+          <div class="scanner-header">
+
+            <h1>
+              Scan Ticket
+            </h1>
+
+            <p class="subtitle">
+              Point the camera at the QR code
+              printed on the ticket.
+            </p>
+
+          </div>
+
+
+          <div id="qr-reader"></div>
+
+
+          <p class="scanner-help">
+            Point the camera at the QR code.
+          </p>
+
+
+          <button
+            class="secondary-button"
+            onclick="cancelScan()">
+
+            CANCEL
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   CANCEL SCAN
+   ============================================================ */
+
+async function cancelScan() {
+
+  validationInProgress = false;
+
+  scanInProgress = false;
+
+  cameraStarting = false;
+
+
+  await stopAndDestroyScanner();
+
+
+  showReadyScreen();
+
+}
+
+
+/* ============================================================
+   VALIDATE TICKET
+   ============================================================ */
+
+async function validateTicket(
+  ticketValue
+) {
+
+  if (!ticketValue) {
+
+    validationInProgress = false;
+
+    showSystemError(
+      "The QR code does not contain a ticket ID."
+    );
+
+    return;
+
+  }
+
+
+  showCheckingScreen();
+
+
+  try {
+
+    const result =
+      await callApiWithTimeout(
+        "validateTicket",
+        {
+
+          ticketId:
+            ticketValue,
+
+          scannerId:
+            localStorage.getItem(
+              STORAGE_KEYS.scannerId
+            ),
+
+          scannerName:
+            localStorage.getItem(
+              STORAGE_KEYS.scannerName
+            )
+
+        },
+
+        CONFIG.VALIDATION_TIMEOUT
+
+      );
+
+
+    console.log(
+      "Validation response:",
+      result
+    );
+
+
+    validationInProgress = false;
+
+
+    handleValidationResult(
+      result,
+      ticketValue
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Validation failed:",
+      error
+    );
+
+
+    validationInProgress = false;
+
+
+    showSystemError(
+      error.message ||
+      "Unable to validate the ticket."
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   HANDLE VALIDATION RESULT
+   ============================================================ */
+
+function handleValidationResult(
+  result,
+  ticketValue
+) {
+
+  if (!result) {
+
+    showSystemError(
+      "The server returned no response."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Support several common response formats.
+   */
+
+  const status =
+    String(
+      result.status ||
+      result.result ||
+      ""
+    )
+      .toUpperCase();
+
+
+  const ticketId =
+    result.ticketId ||
+    result.ticketID ||
+    ticketValue;
+
 
   if (
-    error &&
-    (
-      error.name === 'NotAllowedError' ||
-      error.name === 'PermissionDeniedError'
-    )
+    status === "VALID" ||
+    status === "AVAILABLE" ||
+    status === "SUCCESS"
   ) {
 
-    message =
-      'Camera permission is blocked for this website. Open the site settings, set Camera to Allow, then reload the page.';
+    showValidTicket(
+      ticketId,
+      result.message
+    );
 
-  } else if (
-    error &&
-    error.name === 'NotFoundError'
+    return;
+
+  }
+
+
+  if (
+    status === "ALREADY_USED" ||
+    status === "USED"
   ) {
 
-    message =
-      'No camera was found on this device.';
+    showAlreadyUsed(
+      ticketId,
+      result.message
+    );
 
-  } else if (
-    error &&
-    error.name === 'NotReadableError'
+    return;
+
+  }
+
+
+  if (
+    status === "INVALID" ||
+    status === "NOT_FOUND"
   ) {
 
-    message =
-      'The camera is already being used by another app or browser tab. Close it and try again.';
+    showInvalidTicket(
+      ticketId,
+      result.message
+    );
 
-  } else if (
+    return;
+
+  }
+
+
+  /*
+   * Some Apps Script implementations
+   * return { valid: true/false }.
+   */
+
+  if (
+    result.valid === true
+  ) {
+
+    showValidTicket(
+      ticketId,
+      result.message
+    );
+
+    return;
+
+  }
+
+
+  if (
+    result.valid === false
+  ) {
+
+    if (
+      result.alreadyUsed ||
+      result.used
+    ) {
+
+      showAlreadyUsed(
+        ticketId,
+        result.message
+      );
+
+    } else {
+
+      showInvalidTicket(
+        ticketId,
+        result.message
+      );
+
+    }
+
+    return;
+
+  }
+
+
+  showSystemError(
+    result.message ||
+    "Unexpected response from the ticket server."
+  );
+
+}
+
+
+/* ============================================================
+   VALID TICKET
+   ============================================================ */
+
+function showValidTicket(
+  ticketId,
+  message
+) {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-valid">
+
+          <div class="result-icon">
+            ✓
+          </div>
+
+          <div class="result-title">
+            VALID TICKET
+          </div>
+
+          <div class="ticket-id">
+            ${escapeHtml(ticketId)}
+          </div>
+
+          <div class="entry-status">
+            ENTRY ALLOWED
+          </div>
+
+          <p class="result-message">
+            ${
+              escapeHtml(
+                message ||
+                "This ticket is valid."
+              )
+            }
+          </p>
+
+          <button
+            id="nextTicketButton"
+            class="primary-button"
+            onclick="scanNextTicket()">
+
+            SCAN NEXT TICKET
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   ALREADY USED
+   ============================================================ */
+
+function showAlreadyUsed(
+  ticketId,
+  message
+) {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-invalid">
+
+          <div class="result-icon">
+            ×
+          </div>
+
+          <div class="result-title">
+            ALREADY USED
+          </div>
+
+          <div class="ticket-id">
+            ${escapeHtml(ticketId)}
+          </div>
+
+          <div class="entry-status">
+            ENTRY DENIED
+          </div>
+
+          <p class="result-message">
+            ${
+              escapeHtml(
+                message ||
+                "This ticket has already been used."
+              )
+            }
+          </p>
+
+          <button
+            class="primary-button"
+            onclick="scanNextTicket()">
+
+            SCAN NEXT TICKET
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   INVALID TICKET
+   ============================================================ */
+
+function showInvalidTicket(
+  ticketId,
+  message
+) {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-invalid">
+
+          <div class="result-icon">
+            ×
+          </div>
+
+          <div class="result-title">
+            INVALID TICKET
+          </div>
+
+          <div class="ticket-id">
+            ${escapeHtml(ticketId)}
+          </div>
+
+          <div class="entry-status">
+            ENTRY DENIED
+          </div>
+
+          <p class="result-message">
+            ${
+              escapeHtml(
+                message ||
+                "This ticket does not exist."
+              )
+            }
+          </p>
+
+          <button
+            class="primary-button"
+            onclick="scanNextTicket()">
+
+            SCAN NEXT TICKET
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   SYSTEM ERROR
+   ============================================================ */
+
+function showSystemError(
+  message
+) {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-error">
+
+          <div class="result-icon">
+            !
+          </div>
+
+          <div class="result-title">
+            SYSTEM ERROR
+          </div>
+
+          <p class="error-message">
+            ${escapeHtml(message)}
+          </p>
+
+          <button
+            class="primary-button"
+            onclick="scanNextTicket()">
+
+            TRY AGAIN
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   CAMERA ERROR
+   ============================================================ */
+
+function showCameraError(
+  error
+) {
+
+  let message =
+    "The camera could not be started.";
+
+
+  if (
     error &&
     error.message
   ) {
 
     message =
-      'Camera error: ' + error.message;
+      error.message;
+
   }
 
-  document
-    .getElementById('cameraStatus')
-    .innerHTML =
-      '<b>Camera could not be started</b><br><br>' +
-      escapeHtml(message);
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-error">
+
+          <div class="result-icon">
+            !
+          </div>
+
+          <div class="result-title">
+            CAMERA ERROR
+          </div>
+
+          <p class="error-message">
+            ${escapeHtml(message)}
+          </p>
+
+          <p class="small">
+            Make sure camera access is allowed
+            for this website.
+          </p>
+
+          <button
+            class="primary-button"
+            onclick="startScanner()">
+
+            TRY CAMERA AGAIN
+
+          </button>
+
+          <div class="button-gap">
+
+            <button
+              class="secondary-button"
+              onclick="showReadyScreen()">
+
+              CANCEL
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
 }
 
 
-/* =========================================================
-   STOP CAMERA
-   ========================================================= */
+/* ============================================================
+   CHECKING SCREEN
+   ============================================================ */
 
-async function stopCamera() {
+function showCheckingScreen() {
 
-  await destroyScanner();
+  document.getElementById("app").innerHTML = `
 
-  show('scanner');
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card checking-card">
+
+          <div class="spinner"></div>
+
+          <h2>
+            Checking ticket...
+          </h2>
+
+          <p>
+            Please wait.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
 }
 
 
-/* =========================================================
-   VALIDATE TICKET
-   ========================================================= */
+/* ============================================================
+   SCAN NEXT TICKET
+   ============================================================ */
 
-function validateTicket(ticketId) {
+async function scanNextTicket() {
 
-  ticketId =
-    String(ticketId || '')
-      .trim()
-      .toUpperCase();
-
-  if (!ticketId) {
-    showSystemError(
-      'The QR code did not contain a ticket ID.'
-    );
-    return;
-  }
-
-  const deviceId =
-    localStorage.getItem(DEVICE_KEY);
-
-  const token =
-    localStorage.getItem(TOKEN_KEY);
-
-  if (!deviceId || !token) {
-
-    showSystemError(
-      'This scanner is no longer registered.'
-    );
-
-    return;
-  }
-
-  currentOperation = 'validateTicket';
-
-  setLoading('Checking ticket...');
-
-  apiGet(
-    'validateTicket',
-    {
-      deviceId: deviceId,
-      token: token,
-      ticketId: ticketId
-    },
-    function(result) {
-
-      if (!result) {
-        showSystemError(
-          'The server returned no response.'
-        );
-        return;
-      }
-
-      displayResult(result);
-    }
+  console.log(
+    "SCAN NEXT TICKET clicked"
   );
-}
 
-
-/* =========================================================
-   DISPLAY RESULT
-   ========================================================= */
-
-async function displayResult(result) {
-
-  /* Camera should already be stopped, but make this idempotent. */
-  await destroyScanner();
-
-  const card =
-    document.getElementById('result');
-
-  card.classList.remove(
-    'valid',
-    'invalid',
-    'warning'
-  );
-
-  let title = '';
-  let entry = '';
-
-  switch (result.type) {
-
-    case 'VALID':
-
-      card.classList.add('valid');
-
-      title = '✓ VALID TICKET';
-      entry = 'ENTRY ALLOWED';
-
-      break;
-
-
-    case 'USED':
-
-      card.classList.add('invalid');
-
-      title = '✕ ALREADY USED';
-      entry = 'ENTRY DENIED';
-
-      break;
-
-
-    case 'INVALID':
-
-      card.classList.add('invalid');
-
-      title = '✕ INVALID TICKET';
-      entry = 'ENTRY DENIED';
-
-      break;
-
-
-    case 'UNAUTHORIZED':
-
-      card.classList.add('invalid');
-
-      title = '🔒 SCANNER NOT AUTHORIZED';
-      entry = 'ACCESS DENIED';
-
-      break;
-
-
-    default:
-
-      card.classList.add('warning');
-
-      title = '⚠ SYSTEM ERROR';
-      entry = 'PLEASE TRY AGAIN';
-  }
-
-
-  document
-    .getElementById('resultTitle')
-    .textContent = title;
-
-  document
-    .getElementById('resultTicket')
-    .textContent =
-      result.ticketId || '';
-
-  document
-    .getElementById('resultEntry')
-    .textContent = entry;
-
-  document
-    .getElementById('resultMessage')
-    .textContent =
-      result.message || '';
-
-  show('result');
-}
-
-
-/* =========================================================
-   NEXT TICKET
-   ========================================================= */
-
-async function nextTicket() {
-
-  currentOperation = null;
 
   /*
-   * Always start a completely new camera session.
-   * Keep lastScannedTicketId so that if the previous ticket
-   * is still in front of the camera it is ignored.
+   * Reset all state.
    */
-  await destroyScanner();
 
-  show('camera');
+  validationInProgress = false;
 
-  document
-    .getElementById('cameraStatus')
-    .textContent =
-      'Starting camera...';
+  scanInProgress = false;
 
-  await startCamera();
+  cameraStarting = false;
+
+
+  /*
+   * IMPORTANT:
+   *
+   * Completely release camera from
+   * previous scan before starting
+   * another one.
+   */
+
+  await stopAndDestroyScanner();
+
+
+  /*
+   * Small Android Chrome delay.
+   */
+
+  await sleep(400);
+
+
+  /*
+   * Start a brand-new scanner.
+   */
+
+  startScanner();
+
 }
 
 
-/* =========================================================
-   UNREGISTER
-   ========================================================= */
+/* ============================================================
+   UNREGISTER SCANNER
+   ============================================================ */
 
-function unregisterScanner() {
+async function unregisterScanner() {
 
   const confirmed =
     window.confirm(
-      'Unregister this scanner from this browser?'
+      "Unregister this scanner from this phone?"
     );
+
 
   if (!confirmed) {
+
     return;
+
   }
 
-  localStorage.removeItem(DEVICE_KEY);
-  localStorage.removeItem(TOKEN_KEY);
 
-  location.reload();
+  await stopAndDestroyScanner();
+
+
+  localStorage.removeItem(
+    STORAGE_KEYS.scannerId
+  );
+
+  localStorage.removeItem(
+    STORAGE_KEYS.scannerName
+  );
+
+  localStorage.removeItem(
+    STORAGE_KEYS.registered
+  );
+
+
+  showRegistrationScreen();
+
 }
 
 
-/* =========================================================
-   SYSTEM ERROR
-   ========================================================= */
+/* ============================================================
+   API CALL
+   ============================================================ */
 
-function showSystemError(message) {
-
-  document
-    .getElementById('systemErrorMessage')
-    .textContent =
-      message || 'Please try again.';
-
-  show('systemError');
-}
-
-
-function retryCurrentOperation() {
-
-  if (currentOperation === 'checkDevice') {
-    start();
-    return;
-  }
-
-  if (currentOperation === 'validateTicket') {
-    show('scanner');
-    return;
-  }
-
-  show('scanner');
-}
-
-
-/* =========================================================
-   JSONP API CLIENT
-   ========================================================= */
-
-function apiGet(
+async function callApi(
   action,
-  params,
-  onComplete
+  params = {}
 ) {
 
-  const callbackName =
-    'apiCallback_' +
-    Date.now() +
-    '_' +
-    Math.random()
-      .toString(36)
-      .substring(2);
+  if (
+    !CONFIG.API_URL ||
+    CONFIG.API_URL.includes("PASTE_YOUR")
+  ) {
 
-
-  let finished = false;
-
-  const script =
-    document.createElement('script');
-
-
-  function finish(result) {
-
-    if (finished) {
-      return;
-    }
-
-    finished = true;
-
-    clearTimeout(timeout);
-
-    delete window[callbackName];
-
-    if (script.parentNode) {
-      script.parentNode.removeChild(script);
-    }
-
-    onComplete(
-      result
+    throw new Error(
+      "Apps Script API URL has not been configured."
     );
+
   }
 
 
-  window[callbackName] =
-    function(result) {
-      finish(result);
-    };
+  const url =
+    new URL(
+      CONFIG.API_URL
+    );
 
 
-  const query =
-    new URLSearchParams();
-
-  query.set(
-    'action',
+  url.searchParams.set(
+    "action",
     action
   );
 
-  query.set(
-    'callback',
-    callbackName
+
+  Object.keys(params)
+    .forEach(
+      function(key) {
+
+        const value =
+          params[key];
+
+        if (
+          value !== undefined &&
+          value !== null
+        ) {
+
+          url.searchParams.set(
+            key,
+            value
+          );
+
+        }
+
+      }
+    );
+
+
+  console.log(
+    "API request:",
+    action
   );
 
 
-  Object.keys(params || {})
-    .forEach(function(key) {
+  const response =
+    await fetch(
+      url.toString(),
+      {
 
-      query.set(
-        key,
-        String(params[key])
-      );
+        method: "GET",
 
-    });
+        cache: "no-store",
 
+        redirect: "follow"
 
-  script.src =
-    BACKEND_URL +
-    '?' +
-    query.toString();
+      }
+    );
 
 
-  script.onerror =
-    function() {
+  if (
+    !response.ok
+  ) {
 
-      finish({
-        success: false,
-        type: 'ERROR',
-        message:
-          'Unable to contact the ticket server.'
-      });
+    throw new Error(
+      "Server returned HTTP " +
+      response.status
+    );
 
-    };
-
-
-  /*
-   * Prevent infinite loading if Apps Script
-   * never responds.
-   */
-
-  const timeout =
-    setTimeout(function() {
-
-      finish({
-        success: false,
-        type: 'ERROR',
-        message:
-          'The ticket server did not respond. Check your internet connection and try again.'
-      });
-
-    }, 15000);
+  }
 
 
-  document.body.appendChild(script);
+  const text =
+    await response.text();
+
+
+  console.log(
+    "API raw response:",
+    text
+  );
+
+
+  try {
+
+    return JSON.parse(
+      text
+    );
+
+  } catch (error) {
+
+    throw new Error(
+      "The server returned an invalid response."
+    );
+
+  }
+
 }
 
 
-/* =========================================================
-   PAGE RESTORE / BACK-FORWARD CACHE
-   ========================================================= */
+/* ============================================================
+   API CALL WITH TIMEOUT
+   ============================================================ */
 
-/*
- * Mobile Chrome can restore a previous page state from its
- * back-forward cache instead of running the page from scratch.
- *
- * Without this handler, the result screen can appear again
- * when the scanner URL is reopened/restored.
- */
-window.addEventListener('pageshow', function(event) {
+async function callApiWithTimeout(
+  action,
+  params,
+  timeout
+) {
 
-  if (event.persisted) {
+  return Promise.race([
 
-    /*
-     * Make sure an old camera session cannot survive
-     * a browser page restore.
-     */
-    destroyScanner();
+    callApi(
+      action,
+      params
+    ),
 
-    /*
-     * Re-run scanner authentication and return to READY.
-     */
-    setTimeout(function() {
-      start();
-    }, 50);
-  }
-});
+    new Promise(
+      function(
+        resolve,
+        reject
+      ) {
+
+        setTimeout(
+          function() {
+
+            reject(
+              new Error(
+                "The ticket server did not respond. Please check the internet connection and try again."
+              )
+            );
+
+          },
+          timeout
+        );
+
+      }
+    )
+
+  ]);
+
+}
 
 
-/*
- * If the page becomes hidden while scanning, release the
- * camera. When the scanner page is opened again the user
- * can start a fresh scan.
- *
- * We intentionally do not auto-start the camera here.
- */
+/* ============================================================
+   CONFIGURATION ERROR
+   ============================================================ */
+
+function showConfigurationError() {
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="page">
+
+      <div class="container">
+
+        <div class="card result-card result-error">
+
+          <div class="result-icon">
+            !
+          </div>
+
+          <div class="result-title">
+            CONFIGURATION ERROR
+          </div>
+
+          <p class="error-message">
+            The Apps Script API URL has not been
+            configured in index.html.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   UTILITY: SLEEP
+   ============================================================ */
+
+function sleep(
+  milliseconds
+) {
+
+  return new Promise(
+    function(resolve) {
+
+      setTimeout(
+        resolve,
+        milliseconds
+      );
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   UTILITY: ESCAPE HTML
+   ============================================================ */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* ============================================================
+   HANDLE PAGE CLOSING / HIDING
+   ============================================================ */
+
 document.addEventListener(
-  'visibilitychange',
-  function() {
+  "visibilitychange",
+  async function() {
+
+    /*
+     * If the user leaves the page,
+     * release the camera.
+     */
 
     if (
-      document.visibilityState === 'hidden' &&
-      scanning
+      document.hidden &&
+      scanner
     ) {
-      destroyScanner();
+
+      await stopAndDestroyScanner();
+
     }
 
   }
 );
 
 
-/* =========================================================
-   START
-   ========================================================= */
+/* ============================================================
+   HANDLE BACK/FORWARD CACHE
+   ============================================================ */
 
-start();
+window.addEventListener(
+  "pageshow",
+  function(event) {
+
+    /*
+     * Android Chrome may restore the page
+     * from its back-forward cache.
+
+     * Make sure the scanner state is clean.
+     */
+
+    if (
+      event.persisted
+    ) {
+
+      scanner = null;
+
+      scannerRunning = false;
+
+      scanInProgress = false;
+
+      validationInProgress = false;
+
+      cameraStarting = false;
+
+      initializeApp();
+
+    }
+
+  }
+);
 
 </script>
 

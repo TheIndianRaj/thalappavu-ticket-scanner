@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Thalappavu Ticket Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  font-family: Arial, sans-serif;
+  color: #202124;
+}
+
+.page {
+  max-width: 520px;
+  margin: auto;
+  padding: 16px;
+}
+
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 25px 20px;
+  margin-top: 15px;
+  box-shadow: 0 3px 15px rgba(0,0,0,.08);
+}
+
+.hidden {
+  display: none !important;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.sub {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.ready {
+  color: #188038;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.device {
+  color: #666;
+  margin: 8px 0 25px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 13px;
+  padding: 17px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  background: #1a73e8;
+  color: white;
+}
+
+.secondary {
+  background: #eee;
+  margin-top: 15px;
+}
+
+.camera-help {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f1f5fe;
+  border: 1px solid #d2e3fc;
+  border-radius: 12px;
+}
+
+.camera-help-title {
+  font-size: 17px;
+  font-weight: bold;
+  color: #174ea6;
+}
+
+.camera-help-text {
+  margin-top: 6px;
+  color: #666;
+  font-size: 14px;
+}
+
+.camera-help details {
+  margin-top: 12px;
+}
+
+.camera-help summary {
+  color: #1a73e8;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.help-content {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.help-content li {
+  margin-bottom: 8px;
+}
+
+#reader {
+  width: 100%;
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.result {
+  text-align: center;
+  padding: 35px 20px;
+}
+
+.valid {
+  border-top: 12px solid #188038;
+}
+
+.invalid {
+  border-top: 12px solid #d93025;
+}
+
+.warning {
+  border-top: 12px solid #f29900;
+}
+
+.result-title {
+  font-size: 31px;
+  font-weight: bold;
+}
+
+.valid .result-title,
+.valid .entry {
+  color: #188038;
+}
+
+.invalid .result-title,
+.invalid .entry {
+  color: #d93025;
+}
+
+.warning .result-title,
+.warning .entry {
+  color: #f29900;
+}
+
+.ticket-id {
+  margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  word-break: break-all;
+}
+
+.entry {
+  margin-top: 25px;
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.message {
+  margin-top: 15px;
+  color: #666;
+}
+
+.error {
+  color: #d93025;
+  margin-top: 15px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 18px 0 7px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+
+<!-- =========================================
+     LOADING
+========================================= -->
+
+<div id="loading"
+     class="card loading">
+
+  Checking scanner...
+
+</div>
+
+
+<!-- =========================================
+     REGISTRATION
+========================================= -->
+
+<div id="registration"
+     class="card hidden">
+
+  <h1>Register Scanner</h1>
+
+  <div class="sub">
+    Register this phone as an
+    authorized event scanner.
+  </div>
+
+
+  <label>
+    Scanner name
+  </label>
+
+  <input id="deviceName"
+         placeholder="Main Gate 1">
+
+
+  <label>
+    Registration code
+  </label>
+
+  <input id="registrationCode"
+         type="password"
+         placeholder="Registration code">
+
+
+  <button class="primary"
+          onclick="registerScanner()">
+
+    REGISTER THIS PHONE
+
+  </button>
+
+
+  <div id="registrationError"
+       class="error">
+  </div>
+
+</div>
+
+
+<!-- =========================================
+     READY
+========================================= -->
+
+<div id="scanner"
+     class="card hidden">
+
+  <div class="ready">
+    ● READY
+  </div>
+
+  <h1>
+    Ticket Scanner
+  </h1>
+
+  <div id="deviceInfo"
+       class="device">
+  </div>
+
+
+  <button class="primary"
+          onclick="startCamera()">
+
+    📷 SCAN TICKET
+
+  </button>
+
+
+  <div class="camera-help">
+
+    <div class="camera-help-title">
+      📷 Camera Permission
+    </div>
+
+    <div class="camera-help-text">
+      Camera access is required to scan tickets.
+    </div>
+
+
+    <details>
+
+      <summary>
+        How to allow camera access
+      </summary>
+
+
+      <div class="help-content">
+
+        <strong>Android / Chrome</strong>
+
+        <ol>
+          <li>
+            Tap <b>SCAN TICKET</b>.
+          </li>
+
+          <li>
+            When Chrome asks for camera
+            permission, tap <b>Allow</b>.
+          </li>
+
+          <li>
+            If camera access was previously
+            blocked, open Chrome →
+            Settings → Site settings →
+            Camera.
+          </li>
+
+          <li>
+            Make sure Camera is enabled.
+          </li>
+
+          <li>
+            Return here and reload this page.
+          </li>
+        </ol>
+
+
+        <strong>iPhone / Safari</strong>
+
+        <ol>
+          <li>
+            Tap <b>SCAN TICKET</b>.
+          </li>
+
+          <li>
+            Tap <b>Allow</b> when asked.
+          </li>
+
+          <li>
+            If blocked, open
+            Settings → Safari → Camera.
+          </li>
+        </ol>
+
+      </div>
+
+    </details>
+
+  </div>
+
+
+  <button class="secondary"
+          onclick="unregisterScanner()">
+
+    Unregister this browser
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
+     CAMERA
+========================================= -->
+
+<div id="camera"
+     class="card hidden">
+
+  <h1>
+    Scan Ticket
+  </h1>
+
+  <div class="sub">
+    Point the camera at the QR code.
+  </div>
+
+
+  <div id="reader"></div>
+
+
+  <button class="secondary"
+          onclick="stopCamera()">
+
+    CANCEL
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
+     RESULT
+========================================= -->
+
+<div id="result"
+     class="card result hidden">
+
+  <div id="resultTitle"
+       class="result-title">
+  </div>
+
+  <div id="resultTicket"
+       class="ticket-id">
+  </div>
+
+  <div id="resultEntry"
+       class="entry">
+  </div>
+
+  <div id="resultMessage"
+       class="message">
+  </div>
+
+
+  <button class="primary"
+          onclick="nextTicket()">
+
+    SCAN NEXT TICKET
+
+  </button>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const BACKEND_URL =
+  'PUT_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+
+
+const DEVICE_KEY =
+  'thalappavu_device_id';
+
+
+const TOKEN_KEY =
+  'thalappavu_device_token';
+
+
+let scanner = null;
+
+let scanning = false;
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function show(id) {
+
+  [
+    'loading',
+    'registration',
+    'scanner',
+    'camera',
+    'result'
+  ].forEach(function(item) {
+
+    document
+      .getElementById(item)
+      .classList.add('hidden');
+
+  });
+
+
+  document
+    .getElementById(id)
+    .classList.remove('hidden');
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function start() {
+
+  const deviceId =
+    localStorage.getItem(
+      DEVICE_KEY
+    );
+
+
+  const token =
+    localStorage.getItem(
+      TOKEN_KEY
+    );
+
+
+  if (!deviceId || !token) {
+
+    show('registration');
+
+    return;
+
+  }
+
+
+  apiGet(
+    'checkDevice',
+    {
+      deviceId: deviceId,
+      token: token
+    },
+
+    function(result) {
+
+      if (result.authorized) {
+
+        document
+          .getElementById(
+            'deviceInfo'
+          )
+          .textContent =
+            result.deviceName +
+            ' • ' +
+            result.deviceId;
+
+
+        show('scanner');
+
+      }
+
+      else {
+
+        localStorage.removeItem(
+          DEVICE_KEY
+        );
+
+        localStorage.removeItem(
+          TOKEN_KEY
+        );
+
+
+        show('registration');
+
+
+        document
+          .getElementById(
+            'registrationError'
+          )
+          .textContent =
+            result.message ||
+            'Scanner authorization failed.';
+
+      }
+
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+function registerScanner() {
+
+  const name =
+    document
+      .getElementById(
+        'deviceName'
+      )
+      .value
+      .trim();
+
+
+  const code =
+    document
+      .getElementById(
+        'registrationCode'
+      )
+      .value
+      .trim();
+
+
+  if (!name || !code) {
+
+    document
+      .getElementById(
+        'registrationError'
+      )
+      .textContent =
+        'Enter scanner name and registration code.';
+
+    return;
+
+  }
+
+
+  const requestId =
+    createRequestId();
+
+
+  show('loading');
+
+
+  postToBackend({
+    action:
+      'registerDevice',
+
+    requestId:
+      requestId,
+
+    deviceName:
+      name,
+
+    registrationCode:
+      code
+
+  });
+
+
+  pollResult(
+    requestId,
+
+    function(result) {
+
+      if (!result.success) {
+
+        show('registration');
+
+
+        document
+          .getElementById(
+            'registrationError'
+          )
+          .textContent =
+            result.message;
+
+        return;
+
+      }
+
+
+      localStorage.setItem(
+        DEVICE_KEY,
+        result.deviceId
+      );
+
+
+      localStorage.setItem(
+        TOKEN_KEY,
+        result.token
+      );
+
+
+      start();
+
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+async function startCamera() {
+
+  show('camera');
+
+
+  try {
+
+    /*
+     * Explicitly request camera permission.
+     * This is now running on the standalone
+     * GitHub Pages site, not an Apps Script iframe.
+     */
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          video: {
+            facingMode: {
+              ideal: 'environment'
+            }
+          }
+        });
+
+
+    stream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+
+    scanner =
+      new Html5Qrcode(
+        'reader'
+      );
+
+
+    scanning = true;
+
+
+    await scanner.start(
+
+      {
+        facingMode: 'environment'
+      },
+
+      {
+        fps: 10,
+
+        qrbox: {
+          width: 260,
+          height: 260
+        }
+      },
+
+      function(decodedText) {
+
+        if (!scanning) {
+          return;
+        }
+
+
+        scanning = false;
+
+
+        scanner
+          .stop()
+          .then(function() {
+
+            scanner.clear();
+
+            validateTicket(
+              decodedText
+            );
+
+          });
+
+      },
+
+      function() {
+
+        /* QR not found yet — ignore */
+
+      }
+
+    );
+
+
+  } catch (error) {
+
+    showCameraError(
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CAMERA ERROR
+========================================================= */
+
+function showCameraError(error) {
+
+  show('camera');
+
+
+  document
+    .getElementById(
+      'reader'
+    )
+    .innerHTML = `
+
+      <div style="
+        padding:25px;
+        text-align:center;
+        background:#fff4f4;
+        border-radius:15px;
+        border:1px solid #f5c2c2;
+      ">
+
+        <div style="
+          font-size:42px;
+        ">
+          ⚠️
+        </div>
+
+        <h2>
+          Camera Unavailable
+        </h2>
+
+        <p style="
+          color:#666;
+          line-height:1.5;
+        ">
+          The scanner could not access
+          your camera.
+        </p>
+
+        <p style="
+          color:#666;
+          line-height:1.5;
+        ">
+          Please check your browser's
+          camera permission and try again.
+        </p>
+
+        <button
+          class="primary"
+          onclick="startCamera()">
+
+          TRY CAMERA AGAIN
+
+        </button>
+
+      </div>
+  `;
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+async function stopCamera() {
+
+  scanning = false;
+
+
+  if (scanner) {
+
+    try {
+
+      await scanner.stop();
+
+      scanner.clear();
+
+    } catch (e) {}
+
+    scanner = null;
+
+  }
+
+
+  show('scanner');
+
+}
+
+
+/* =========================================================
+   VALIDATE TICKET
+========================================================= */
+
+function validateTicket(
+  ticketId
+) {
+
+  ticketId =
+    String(ticketId || '')
+      .trim()
+      .toUpperCase();
+
+
+  const deviceId =
+    localStorage.getItem(
+      DEVICE_KEY
+    );
+
+
+  const token =
+    localStorage.getItem(
+      TOKEN_KEY
+    );
+
+
+  const requestId =
+    createRequestId();
+
+
+  show('loading');
+
+
+  postToBackend({
+
+    action:
+      'validateTicket',
+
+    requestId:
+      requestId,
+
+    deviceId:
+      deviceId,
+
+    token:
+      token,
+
+    ticketId:
+      ticketId
+
+  });
+
+
+  pollResult(
+
+    requestId,
+
+    function(result) {
+
+      displayResult(
+        result
+      );
+
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   DISPLAY RESULT
+========================================================= */
+
+function displayResult(
+  result
+) {
+
+  const card =
+    document
+      .getElementById(
+        'result'
+      );
+
+
+  card.classList.remove(
+    'valid',
+    'invalid',
+    'warning'
+  );
+
+
+  let title;
+  let entry;
+
+
+  if (
+    result.type ===
+    'VALID'
+  ) {
+
+    card.classList.add(
+      'valid'
+    );
+
+    title =
+      '✓ VALID TICKET';
+
+    entry =
+      'ENTRY ALLOWED';
+
+  }
+
+  else if (
+    result.type ===
+    'USED'
+  ) {
+
+    card.classList.add(
+      'invalid'
+    );
+
+    title =
+      '✕ ALREADY USED';
+
+    entry =
+      'ENTRY DENIED';
+
+  }
+
+  else if (
+    result.type ===
+    'INVALID'
+  ) {
+
+    card.classList.add(
+      'invalid'
+    );
+
+    title =
+      '✕ INVALID TICKET';
+
+    entry =
+      'ENTRY DENIED';
+
+  }
+
+  else if (
+    result.type ===
+    'UNAUTHORIZED'
+  ) {
+
+    card.classList.add(
+      'invalid'
+    );
+
+    title =
+      '🔒 SCANNER NOT AUTHORIZED';
+
+    entry =
+      'ACCESS DENIED';
+
+  }
+
+  else {
+
+    card.classList.add(
+      'warning'
+    );
+
+    title =
+      '⚠ SYSTEM ERROR';
+
+    entry =
+      'PLEASE TRY AGAIN';
+
+  }
+
+
+  document
+    .getElementById(
+      'resultTitle'
+    )
+    .textContent =
+      title;
+
+
+  document
+    .getElementById(
+      'resultTicket'
+    )
+    .textContent =
+      result.ticketId ||
+      '';
+
+
+  document
+    .getElementById(
+      'resultEntry'
+    )
+    .textContent =
+      entry;
+
+
+  document
+    .getElementById(
+      'resultMessage'
+    )
+    .textContent =
+      result.message ||
+      '';
+
+
+  show('result');
+
+}
+
+
+/* =========================================================
+   NEXT
+========================================================= */
+
+function nextTicket() {
+
+  show('scanner');
+
+}
+
+
+/* =========================================================
+   UNREGISTER
+========================================================= */
+
+function unregisterScanner() {
+
+  if (
+    !confirm(
+      'Unregister this scanner?'
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  localStorage.removeItem(
+    DEVICE_KEY
+  );
+
+
+  localStorage.removeItem(
+    TOKEN_KEY
+  );
+
+
+  location.reload();
+
+}
+
+
+/* =========================================================
+   POST TO APPS SCRIPT
+========================================================= */
+
+function postToBackend(
+  data
+) {
+
+  /*
+   * Cross-origin HTML form POST.
+   * We intentionally don't read the response.
+   * Result is retrieved through the read-only
+   * JSONP polling endpoint.
+   */
+
+  const iframe =
+    document.createElement(
+      'iframe'
+    );
+
+
+  iframe.name =
+    'api_' +
+    Date.now();
+
+
+  iframe.style.display =
+    'none';
+
+
+  document.body.appendChild(
+    iframe
+  );
+
+
+  const form =
+    document.createElement(
+      'form'
+    );
+
+
+  form.method =
+    'POST';
+
+
+  form.action =
+    BACKEND_URL;
+
+
+  form.target =
+    iframe.name;
+
+
+  Object.keys(data)
+    .forEach(function(key) {
+
+      const input =
+        document.createElement(
+          'input'
+        );
+
+
+      input.type =
+        'hidden';
+
+
+      input.name =
+        key;
+
+
+      input.value =
+        data[key];
+
+
+      form.appendChild(
+        input
+      );
+
+    });
+
+
+  document.body.appendChild(
+    form
+  );
+
+
+  form.submit();
+
+
+  setTimeout(
+    function() {
+
+      form.remove();
+
+      iframe.remove();
+
+    },
+    10000
+  );
+
+}
+
+
+/* =========================================================
+   READ-ONLY JSONP POLLING
+========================================================= */
+
+function pollResult(
+  requestId,
+  onComplete
+) {
+
+  let attempts = 0;
+
+  const maxAttempts = 30;
+
+
+  function check() {
+
+    attempts++;
+
+
+    const callbackName =
+      'resultCallback_' +
+      Date.now() +
+      '_' +
+      Math.random()
+        .toString(36)
+        .substring(2);
+
+
+    window[callbackName] =
+      function(response) {
+
+        cleanup();
+
+
+        if (
+          response.pending &&
+          attempts < maxAttempts
+        ) {
+
+          setTimeout(
+            check,
+            500
+          );
+
+          return;
+
+        }
+
+
+        if (
+          response.pending
+        ) {
+
+          onComplete({
+
+            type: 'ERROR',
+
+            message:
+              'Server did not respond. Please try again.'
+
+          });
+
+          return;
+
+        }
+
+
+        onComplete(
+          response.result
+        );
+
+      };
+
+
+    const script =
+      document.createElement(
+        'script'
+      );
+
+
+    script.src =
+      BACKEND_URL +
+      '?action=getResult' +
+      '&requestId=' +
+      encodeURIComponent(
+        requestId
+      ) +
+      '&callback=' +
+      encodeURIComponent(
+        callbackName
+      );
+
+
+    script.onerror =
+      function() {
+
+        cleanup();
+
+
+        if (
+          attempts < maxAttempts
+        ) {
+
+          setTimeout(
+            check,
+            700
+          );
+
+        }
+
+        else {
+
+          onComplete({
+
+            type: 'ERROR',
+
+            message:
+              'Unable to contact server.'
+
+          });
+
+        }
+
+      };
+
+
+    document.body.appendChild(
+      script
+    );
+
+
+    function cleanup() {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+    }
+
+  }
+
+
+  check();
+
+}
+
+
+/* =========================================================
+   JSONP GET
+========================================================= */
+
+function apiGet(
+  action,
+  params,
+  onComplete
+) {
+
+  const callbackName =
+    'apiCallback_' +
+    Date.now() +
+    '_' +
+    Math.random()
+      .toString(36)
+      .substring(2);
+
+
+  window[callbackName] =
+    function(result) {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+
+      onComplete(
+        result
+      );
+
+    };
+
+
+  const query =
+    new URLSearchParams();
+
+
+  query.set(
+    'action',
+    action
+  );
+
+
+  query.set(
+    'callback',
+    callbackName
+  );
+
+
+  Object.keys(params)
+    .forEach(function(key) {
+
+      query.set(
+        key,
+        params[key]
+      );
+
+    });
+
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+
+  script.src =
+    BACKEND_URL +
+    '?' +
+    query.toString();
+
+
+  script.onerror =
+    function() {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+
+      onComplete({
+
+        authorized: false,
+
+        message:
+          'Unable to contact server.'
+
+      });
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+/* =========================================================
+   REQUEST ID
+========================================================= */
+
+function createRequestId() {
+
+  return (
+    Date.now().toString(36) +
+    '-' +
+    crypto.randomUUID()
+  );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+start();
+
+</script>
+
+</body>
+
+</html>

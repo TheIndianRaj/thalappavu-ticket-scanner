@@ -920,6 +920,11 @@ function start() {
             ' • ' +
             result.deviceId;
 
+        /*
+         * Always enter the READY screen after authentication.
+         * This prevents a restored result screen from remaining
+         * visible when the scanner URL is reopened.
+         */
         show('scanner');
         return;
       }
@@ -1063,94 +1068,99 @@ function registerScanner() {
 
 async function startCamera() {
 
-  if (scanning) {
+  if (scanning || scannerStartPromise) {
     return;
   }
 
   show('camera');
 
-  document
-    .getElementById('reader')
-    .innerHTML = '';
+  const reader =
+    document.getElementById('reader');
+
+  reader.innerHTML = '';
 
   document
     .getElementById('cameraStatus')
     .textContent =
       'Starting camera...';
 
-  /*
-   * IMPORTANT:
-   *
-   * Do NOT call navigator.mediaDevices.getUserMedia()
-   * here before Html5Qrcode.
-   *
-   * That would acquire the camera once and then release it,
-   * after which Html5Qrcode tries to acquire it again.
-   *
-   * On some Android/Chrome combinations this second request
-   * can fail even though Camera permission is already allowed.
-   *
-   * Html5Qrcode handles the camera request itself.
-   */
-
   try {
 
     scanner =
       new Html5Qrcode('reader');
 
-    scanning = true;
+    /*
+     * Keep the promise so another button/page event cannot
+     * start a second camera while the first one is starting.
+     */
+    scannerStartPromise =
+      scanner.start(
 
-    await scanner.start(
-  {
-    facingMode: "environment"
-  },
-
-      {
-        fps: 10,
-
-        qrbox: function(
-          viewfinderWidth,
-          viewfinderHeight
-        ) {
-
-          const size =
-            Math.min(
-              280,
-              Math.floor(
-                Math.min(
-                  viewfinderWidth,
-                  viewfinderHeight
-                ) * 0.72
-              )
-            );
-
-          return {
-            width: size,
-            height: size
-          };
+        /*
+         * html5-qrcode accepts the camera selector in this form.
+         * Do NOT use { ideal: "environment" } here.
+         */
+        {
+          facingMode: "environment"
         },
 
-        aspectRatio: 1.0
-      },
+        {
+          fps: 10,
 
-      function(decodedText) {
+          qrbox: function(
+            viewfinderWidth,
+            viewfinderHeight
+          ) {
 
-        if (!scanning) {
-          return;
+            const size =
+              Math.min(
+                280,
+                Math.floor(
+                  Math.min(
+                    viewfinderWidth,
+                    viewfinderHeight
+                  ) * 0.72
+                )
+              );
+
+            return {
+              width: size,
+              height: size
+            };
+          },
+
+          aspectRatio: 1.0
+        },
+
+        function(decodedText) {
+
+          /*
+           * html5-qrcode can call the success callback more
+           * than once for the same QR while it is visible.
+           * Lock immediately.
+           */
+          if (!scanning) {
+            return;
+          }
+
+          scanning = false;
+
+          handleDecodedTicket(decodedText);
+        },
+
+        function() {
+          /*
+           * QR not detected yet.
+           * Intentionally silent.
+           */
         }
+      );
 
-        scanning = false;
+    await scannerStartPromise;
 
-        validateTicket(decodedText);
-      },
+    scannerStartPromise = null;
 
-      function() {
-        /*
-         * QR not detected yet.
-         * This callback is intentionally silent.
-         */
-      }
-    );
+    scanning = true;
 
     document
       .getElementById('cameraStatus')
@@ -1159,116 +1169,109 @@ async function startCamera() {
 
   } catch (error) {
 
+    scannerStartPromise = null;
     scanning = false;
 
-    /*
-     * Clean up a partially-created scanner.
-     */
-    if (scanner) {
+    await destroyScanner();
 
-      try {
-        await scanner.clear();
-      } catch (e) {}
-
-      scanner = null;
-    }
-
-    let message =
-      'Unable to access the camera.';
-
-    /*
-     * Different browsers/libraries may expose the
-     * underlying camera problem in different ways.
-     */
-
-    const errorName =
-      error && error.name
-        ? String(error.name)
-        : '';
-
-    const errorText =
-      error && error.message
-        ? String(error.message)
-        : String(error || '');
-
-    const combined =
-      (errorName + ' ' + errorText)
-        .toLowerCase();
-
-
-    if (
-      errorName === 'NotAllowedError' ||
-      errorName === 'PermissionDeniedError' ||
-      combined.includes('permission denied') ||
-      combined.includes('notallowederror')
-    ) {
-
-      message =
-        'Camera permission is blocked for this website. Open the site settings for the website, set Camera to Allow, then reload this page.';
-
-    } else if (
-      errorName === 'NotFoundError' ||
-      combined.includes('no camera')
-    ) {
-
-      message =
-        'No camera was found on this device.';
-
-    } else if (
-      errorName === 'NotReadableError' ||
-      combined.includes('could not start video source') ||
-      combined.includes('could not start camera') ||
-      combined.includes('camera is already in use')
-    ) {
-
-      message =
-        'The camera is already being used by another app or browser tab. Close any other app or tab using the camera, then try again.';
-
-    } else if (
-      errorName === 'OverconstrainedError'
-    ) {
-
-      message =
-        'The requested camera configuration is not available. We will try the device camera again.';
-
-    } else if (
-      combined.includes('secure context')
-    ) {
-
-      message =
-        'The browser did not consider this page secure enough to use the camera. Open the scanner using the HTTPS GitHub Pages address.';
-
-    } else if (errorText) {
-
-      /*
-       * Show the actual error instead of hiding it behind
-       * a generic "camera could not be accessed" message.
-       */
-      message =
-        'Camera error: ' + errorText;
-    }
-
-
-    document
-      .getElementById('cameraStatus')
-      .innerHTML =
-        '<b>Camera could not be started</b><br><br>' +
-        escapeHtml(message);
+    showCameraError(error);
   }
 }
 
 
 /*
- * Safely display browser/library error text.
+ * Called immediately after a QR is decoded.
+ *
+ * The camera is stopped BEFORE the ticket request is sent.
+ * This is important: the browser must completely release
+ * the camera before the next scan begins.
  */
-function escapeHtml(value) {
+async function handleDecodedTicket(decodedText) {
 
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+  try {
+
+    await stopScannerOnly();
+
+  } catch (e) {
+    /*
+     * Even if stopping reports an error, continue with
+     * ticket validation. The validation itself is server-side.
+     */
+  }
+
+  validateTicket(decodedText);
+}
+
+
+/*
+ * Stop the current Html5Qrcode instance and release
+ * the camera. Does not change the visible page.
+ */
+async function stopScannerOnly() {
+
+  scanning = false;
+
+  /*
+   * If start() is still in progress, wait for it to finish.
+   */
+  if (scannerStartPromise) {
+
+    try {
+      await scannerStartPromise;
+    } catch (e) {
+      scannerStartPromise = null;
+    }
+  }
+
+  if (!scanner) {
+    return;
+  }
+
+  const currentScanner = scanner;
+
+  scanner = null;
+
+  try {
+
+    if (
+      typeof currentScanner.isScanning !== 'undefined'
+        ? currentScanner.isScanning
+        : true
+    ) {
+      await currentScanner.stop();
+    }
+
+  } catch (e) {
+
+    /*
+     * Some versions throw if stop() is called after the
+     * scanner has already stopped. Continue cleanup.
+     */
+
+  }
+
+  try {
+    currentScanner.clear();
+  } catch (e) {}
+
+}
+
+
+/*
+ * Complete scanner cleanup.
+ */
+async function destroyScanner() {
+
+  try {
+    await stopScannerOnly();
+  } catch (e) {}
+
+  const reader =
+    document.getElementById('reader');
+
+  if (reader) {
+    reader.innerHTML = '';
+  }
 }
 
 
@@ -1333,20 +1336,7 @@ function showCameraError(error) {
 
 async function stopCamera() {
 
-  scanning = false;
-
-  if (scanner) {
-
-    try {
-      await scanner.stop();
-    } catch (e) {}
-
-    try {
-      scanner.clear();
-    } catch (e) {}
-
-    scanner = null;
-  }
+  await destroyScanner();
 
   show('scanner');
 }
@@ -1415,7 +1405,10 @@ function validateTicket(ticketId) {
    DISPLAY RESULT
    ========================================================= */
 
-function displayResult(result) {
+async function displayResult(result) {
+
+  /* Camera should already be stopped, but make this idempotent. */
+  await destroyScanner();
 
   const card =
     document.getElementById('result');
@@ -1506,11 +1499,15 @@ function displayResult(result) {
    NEXT TICKET
    ========================================================= */
 
-function nextTicket() {
+async function nextTicket() {
 
   currentOperation = null;
 
-  show('scanner');
+  /*
+   * Result screen -> immediately start the next scan.
+   * This avoids leaving the user on an intermediate screen.
+   */
+  await startCamera();
 }
 
 
@@ -1684,6 +1681,59 @@ function apiGet(
 
   document.body.appendChild(script);
 }
+
+
+/* =========================================================
+   PAGE RESTORE / BACK-FORWARD CACHE
+   ========================================================= */
+
+/*
+ * Mobile Chrome can restore a previous page state from its
+ * back-forward cache instead of running the page from scratch.
+ *
+ * Without this handler, the result screen can appear again
+ * when the scanner URL is reopened/restored.
+ */
+window.addEventListener('pageshow', function(event) {
+
+  if (event.persisted) {
+
+    /*
+     * Make sure an old camera session cannot survive
+     * a browser page restore.
+     */
+    destroyScanner();
+
+    /*
+     * Re-run scanner authentication and return to READY.
+     */
+    setTimeout(function() {
+      start();
+    }, 50);
+  }
+});
+
+
+/*
+ * If the page becomes hidden while scanning, release the
+ * camera. When the scanner page is opened again the user
+ * can start a fresh scan.
+ *
+ * We intentionally do not auto-start the camera here.
+ */
+document.addEventListener(
+  'visibilitychange',
+  function() {
+
+    if (
+      document.visibilityState === 'hidden' &&
+      scanning
+    ) {
+      destroyScanner();
+    }
+
+  }
+);
 
 
 /* =========================================================

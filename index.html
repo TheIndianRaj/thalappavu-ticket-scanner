@@ -2,9 +2,7 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
@@ -45,17 +43,18 @@ body {
 
 h1 {
   margin: 0 0 8px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .sub {
   color: #666;
   margin-bottom: 20px;
+  line-height: 1.5;
 }
 
 .ready {
   color: #188038;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -74,6 +73,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
 .primary {
   background: #1a73e8;
   color: white;
@@ -83,6 +87,261 @@ button {
   background: #eee;
   margin-top: 15px;
 }
+
+input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 17px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 18px 0 7px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 16px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* =========================================================
+   REGISTRATION
+   ========================================================= */
+
+.registration-page {
+  min-height: 100vh;
+  padding: 24px 14px 35px;
+  background: linear-gradient(
+    180deg,
+    #f7f9fc 0%,
+    #eef2f7 100%
+  );
+}
+
+.brand {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #111827;
+  color: white;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.festival-name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.system-name {
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: #6b7280;
+}
+
+.registration-card {
+  width: 100%;
+  max-width: 520px;
+  margin: auto;
+  background: white;
+  border-radius: 20px;
+  padding: 28px 22px 22px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(15,23,42,.08);
+}
+
+.setup-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #eef4ff;
+  font-size: 24px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  margin-bottom: 8px;
+}
+
+.registration-card h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+.intro {
+  margin: 10px 0 24px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: #374151;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  height: 54px;
+  padding-right: 48px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 17px;
+  pointer-events: none;
+  opacity: .7;
+}
+
+.input-wrapper input.with-icon {
+  padding-left: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 17px;
+  opacity: .65;
+}
+
+.security-note {
+  display: flex;
+  gap: 11px;
+  margin: 8px 0 20px;
+  padding: 13px;
+  border-radius: 11px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.security-check {
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.security-note strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.security-note span {
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #6b7280;
+}
+
+.register-button {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  box-shadow: 0 4px 10px rgba(37,99,235,.20);
+}
+
+.registration-error {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.registration-error.visible {
+  display: block;
+}
+
+.setup-footer {
+  margin-top: 20px;
+  color: #9ca3af;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-align: center;
+}
+
+
+/* =========================================================
+   CAMERA HELP
+   ========================================================= */
 
 .camera-help {
   margin-top: 20px;
@@ -102,6 +361,7 @@ button {
   margin-top: 6px;
   color: #666;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .camera-help details {
@@ -124,12 +384,29 @@ button {
   margin-bottom: 8px;
 }
 
+
+/* =========================================================
+   CAMERA
+   ========================================================= */
+
 #reader {
   width: 100%;
   margin-top: 20px;
   overflow: hidden;
   border-radius: 15px;
 }
+
+.camera-status {
+  margin-top: 15px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
 
 .result {
   text-align: center;
@@ -151,6 +428,7 @@ button {
 .result-title {
   font-size: 31px;
   font-weight: bold;
+  line-height: 1.15;
 }
 
 .valid .result-title,
@@ -170,7 +448,7 @@ button {
 
 .ticket-id {
   margin-top: 25px;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: bold;
   word-break: break-all;
 }
@@ -184,546 +462,63 @@ button {
 .message {
   margin-top: 15px;
   color: #666;
+  line-height: 1.5;
 }
 
-.error {
-  color: #d93025;
-  margin-top: 15px;
-}
 
-.loading {
+/* =========================================================
+   SYSTEM ERROR
+   ========================================================= */
+
+.error-card {
+  border-top: 10px solid #f29900;
   text-align: center;
-  padding: 40px;
 }
 
-input {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 17px;
+.error-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
 }
 
-label {
-  display: block;
-  font-weight: bold;
-  margin: 18px 0 7px;
-}
-
-/* =========================================================
-   REGISTRATION PAGE
-========================================================= */
-
-.registration-page {
-  min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-
-  padding:
-    28px 18px
-    40px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #f7f9fc 0%,
-      #eef2f7 100%
-    );
-}
-
-
-/* =========================================================
-   BRAND
-========================================================= */
-
-.brand {
-  width: 100%;
-  max-width: 520px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 22px;
-}
-
-.brand-mark {
-  width: 44px;
-  height: 44px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 12px;
-
-  background: #111827;
-
-  color: white;
-
-  font-size: 23px;
-  font-weight: 800;
-
-  box-shadow:
-    0 4px 10px
-    rgba(0,0,0,.12);
-}
-
-.festival-name {
-  font-size: 16px;
-
-  font-weight: 800;
-
-  letter-spacing:
-    .08em;
-
-  color: #111827;
-}
-
-.system-name {
-  margin-top: 2px;
-
-  font-size: 11px;
-
-  font-weight: 600;
-
-  letter-spacing:
-    .12em;
-
-  color: #6b7280;
-}
-
-
-/* =========================================================
-   REGISTRATION CARD
-========================================================= */
-
-.registration-card {
-  width: 100%;
-  max-width: 520px;
-
-  background: white;
-
-  border-radius: 20px;
-
-  padding:
-    30px 28px
-    24px;
-
-  border:
-    1px solid #e5e7eb;
-
-  box-shadow:
-    0 10px 30px
-    rgba(15,23,42,.08);
-}
-
-
-/* =========================================================
-   ICON
-========================================================= */
-
-.setup-icon {
-  width: 50px;
-  height: 50px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 14px;
-
-  background: #eef4ff;
-
-  font-size: 24px;
-
-  margin-bottom: 18px;
-}
-
-
-/* =========================================================
-   HEADING
-========================================================= */
-
-.eyebrow {
-  color: #2563eb;
-
-  font-size: 12px;
-
-  font-weight: 800;
-
-  letter-spacing:
-    .12em;
-
-  margin-bottom: 8px;
-}
-
-.registration-card h1 {
+.error-card h2 {
   margin: 0;
-
-  font-size: 30px;
-
-  line-height: 1.15;
-
-  letter-spacing:
-    -.025em;
-
-  color: #111827;
+  font-size: 28px;
 }
 
-.intro {
-  margin:
-    10px 0
-    28px;
-
-  max-width: 430px;
-
-  font-size: 15px;
-
-  line-height: 1.55;
-
-  color: #6b7280;
-}
-
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.form-group {
-  margin-bottom: 19px;
-}
-
-.form-group label {
-  display: block;
-
-  margin-bottom: 8px;
-
-  font-size: 11px;
-
-  font-weight: 800;
-
-  letter-spacing:
-    .08em;
-
-  color: #374151;
-}
-
-.input-wrapper {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-
-  left: 15px;
-
-  font-size: 17px;
-
-  pointer-events: none;
-
-  opacity: .7;
-}
-
-.input-wrapper input {
-  width: 100%;
-
-  height: 54px;
-
-  padding:
-    0 48px
-    0 45px;
-
-  border:
-    1.5px solid #d1d5db;
-
-  border-radius: 11px;
-
-  outline: none;
-
-  background: #fff;
-
-  color: #111827;
-
-  font-size: 16px;
-
-  transition:
-    border-color .15s,
-    box-shadow .15s,
-    background .15s;
-}
-
-.input-wrapper input::placeholder {
-  color: #9ca3af;
-}
-
-.input-wrapper input:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(37,99,235,.12);
-
-  background: #fff;
-}
-
-.password-toggle {
-  position: absolute;
-
-  right: 7px;
-
-  width: 42px;
-  height: 42px;
-
-  border: none;
-
-  background: transparent;
-
-  cursor: pointer;
-
-  font-size: 17px;
-
-  opacity: .65;
-}
-
-.password-toggle:hover {
-  opacity: 1;
-}
-
-
-/* =========================================================
-   SECURITY NOTE
-========================================================= */
-
-.security-note {
-  display: flex;
-
-  align-items: flex-start;
-
-  gap: 11px;
-
-  margin:
-    6px 0
-    22px;
-
-  padding: 13px;
-
-  border-radius: 11px;
-
-  background: #f8fafc;
-
-  border:
-    1px solid #e5e7eb;
-}
-
-.security-check {
-  flex-shrink: 0;
-
-  width: 23px;
-  height: 23px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #dcfce7;
-
-  color: #15803d;
-
-  font-size: 13px;
-
-  font-weight: 800;
-}
-
-.security-note strong {
-  display: block;
-
-  font-size: 13px;
-
-  color: #374151;
-
-  margin-bottom: 2px;
-}
-
-.security-note span {
-  display: block;
-
-  font-size: 12px;
-
-  line-height: 1.4;
-
-  color: #6b7280;
-}
-
-
-/* =========================================================
-   REGISTER BUTTON
-========================================================= */
-
-.register-button {
-  width: 100%;
-
-  height: 55px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 10px;
-
-  border: none;
-
-  border-radius: 11px;
-
-  background: #2563eb;
-
-  color: white;
-
-  font-size: 15px;
-
-  font-weight: 800;
-
-  letter-spacing:
-    .02em;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 4px 10px
-    rgba(37,99,235,.20);
-
-  transition:
-    background .15s,
-    transform .1s,
-    box-shadow .15s;
-}
-
-.register-button:hover {
-  background: #1d4ed8;
-
-  box-shadow:
-    0 6px 14px
-    rgba(37,99,235,.25);
-}
-
-.register-button:active {
-  transform:
-    translateY(1px);
-}
-
-.button-arrow {
-  font-size: 20px;
-
-  line-height: 1;
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-.registration-error {
-  display: none;
-
-  margin-top: 14px;
-
-  padding: 12px 14px;
-
-  border-radius: 10px;
-
-  background: #fef2f2;
-
-  border:
-    1px solid #fecaca;
-
-  color: #b91c1c;
-
-  font-size: 13px;
-
-  line-height: 1.45;
-}
-
-.registration-error:not(:empty) {
-  display: block;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.setup-footer {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  flex-wrap: wrap;
-
-  gap: 7px;
-
-  margin-top: 20px;
-
-  color: #9ca3af;
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing:
-    .07em;
-
-  text-align: center;
+.error-card p {
+  color: #666;
+  line-height: 1.5;
 }
 
 
 /* =========================================================
    MOBILE
-========================================================= */
+   ========================================================= */
 
 @media (max-width: 480px) {
 
-  .registration-page {
-    padding:
-      20px 14px
-      30px;
+  .page {
+    padding: 12px;
   }
 
-  .brand {
-    margin-bottom: 16px;
+  .registration-page {
+    padding: 20px 12px 30px;
   }
 
   .registration-card {
-    padding:
-      25px 20px
-      20px;
-
-    border-radius: 18px;
+    padding: 25px 18px 20px;
   }
 
   .registration-card h1 {
     font-size: 27px;
   }
 
-  .intro {
-    margin-bottom: 24px;
+  .result-title {
+    font-size: 27px;
   }
-
 }
 
 </style>
-
 </head>
 
 
@@ -731,348 +526,290 @@ label {
 
 <div class="page">
 
-
-<!-- =========================================
-     LOADING
-========================================= -->
-
-<div id="loading"
-     class="card loading">
-
-  Checking scanner...
-
-</div>
+  <!-- LOADING -->
+  <div id="loading" class="card loading">
+    <div class="loading-spinner"></div>
+    <strong id="loadingText">Checking scanner...</strong>
+  </div>
 
 
-<!-- =========================================
-     REGISTRATION
-========================================= -->
+  <!-- REGISTRATION -->
+  <div id="registration"
+       class="registration-page hidden">
 
-<div id="registration" class="registration-page hidden">
+    <div class="brand">
+      <div class="brand-mark">✓</div>
+      <div>
+        <div class="festival-name">
+          THALAPPAVU 2026
+        </div>
+        <div class="system-name">
+          TICKET VERIFICATION
+        </div>
+      </div>
+    </div>
 
-  <div class="brand">
-    <div class="brand-mark">✓</div>
+    <div class="registration-card">
 
-    <div>
-      <div class="festival-name">
-        THALAPPAVU 2026
+      <div class="setup-icon">🔐</div>
+
+      <div class="eyebrow">
+        SCANNER SETUP
       </div>
 
-      <div class="system-name">
-        TICKET VERIFICATION
+      <h1>Register this scanner</h1>
+
+      <p class="intro">
+        Authorize this browser on this phone to
+        validate tickets at the event entrance.
+      </p>
+
+      <div class="form-group">
+        <label for="deviceName">
+          SCANNER NAME
+        </label>
+
+        <div class="input-wrapper">
+          <span class="input-icon">📱</span>
+
+          <input
+            id="deviceName"
+            class="with-icon"
+            type="text"
+            placeholder="e.g. Main Gate 1"
+            autocomplete="off">
+        </div>
       </div>
+
+
+      <div class="form-group">
+        <label for="registrationCode">
+          REGISTRATION CODE
+        </label>
+
+        <div class="input-wrapper">
+          <span class="input-icon">🔑</span>
+
+          <input
+            id="registrationCode"
+            class="with-icon"
+            type="password"
+            placeholder="Enter registration code"
+            autocomplete="off">
+
+          <button
+            type="button"
+            class="password-toggle"
+            onclick="toggleRegistrationCode()"
+            aria-label="Show registration code">
+            👁
+          </button>
+        </div>
+      </div>
+
+
+      <div class="security-note">
+        <div class="security-check">✓</div>
+        <div>
+          <strong>Authorized scanner</strong>
+          <span>
+            This browser will receive a private scanner
+            token used for ticket validation.
+          </span>
+        </div>
+      </div>
+
+
+      <button
+        id="registerButton"
+        class="register-button"
+        onclick="registerScanner()">
+
+        <span>REGISTER THIS SCANNER</span>
+        <span>→</span>
+      </button>
+
+
+      <div id="registrationError"
+           class="registration-error">
+      </div>
+
+
+      <div class="setup-footer">
+        ONE-TIME SETUP • KEEP THIS PHONE AT THE ENTRANCE
+      </div>
+
     </div>
   </div>
 
 
-  <div class="registration-card">
+  <!-- READY -->
+  <div id="scanner" class="card hidden">
 
-    <div class="setup-icon">
-      🔐
+    <div class="ready">
+      ● READY
     </div>
 
-    <div class="eyebrow">
-      SCANNER SETUP
-    </div>
+    <h1>Ticket Scanner</h1>
 
-    <h1>
-      Register this phone
-    </h1>
+    <div id="deviceInfo" class="device"></div>
 
-    <p class="intro">
-      Authorize this phone to validate tickets at the event entrance.
-    </p>
-
-
-    <div class="form-group">
-
-      <label for="deviceName">
-        SCANNER NAME
-      </label>
-
-      <div class="input-wrapper">
-
-        <span class="input-icon">
-          📱
-        </span>
-
-        <input
-          id="deviceName"
-          type="text"
-          placeholder="e.g. Main Gate 1"
-          autocomplete="off"
-        >
-
-      </div>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="registrationCode">
-        REGISTRATION CODE
-      </label>
-
-      <div class="input-wrapper">
-
-        <span class="input-icon">
-          🔑
-        </span>
-
-        <input
-          id="registrationCode"
-          type="password"
-          placeholder="Enter registration code"
-          autocomplete="off"
-        >
-
-        <button
-          type="button"
-          class="password-toggle"
-          onclick="toggleRegistrationCode()"
-          aria-label="Show registration code">
-
-          👁
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="security-note">
-
-      <div class="security-check">
-        ✓
-      </div>
-
-      <div>
-
-        <strong>
-          Authorized scanner
-        </strong>
-
-        <span>
-          This phone will be registered
-          for ticket validation.
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <button
-      class="register-button"
-      onclick="registerScanner()">
-
-      <span>
-        REGISTER THIS PHONE
-      </span>
-
-      <span class="button-arrow">
-        →
-      </span>
-
+    <button class="primary"
+            onclick="startCamera()">
+      📷 SCAN TICKET
     </button>
 
 
-    <div
-      id="registrationError"
-      class="registration-error">
-    </div>
+    <div class="camera-help">
 
-
-    <div class="setup-footer">
-
-      <span>ONE-TIME SETUP</span>
-
-      <span>•</span>
-
-      <span>KEEP THIS PHONE AT THE ENTRANCE</span>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================================
-     READY
-========================================= -->
-
-<div id="scanner"
-     class="card hidden">
-
-  <div class="ready">
-    ● READY
-  </div>
-
-  <h1>
-    Ticket Scanner
-  </h1>
-
-  <div id="deviceInfo"
-       class="device">
-  </div>
-
-
-  <button class="primary"
-          onclick="startCamera()">
-
-    📷 SCAN TICKET
-
-  </button>
-
-
-  <div class="camera-help">
-
-    <div class="camera-help-title">
-      📷 Camera Permission
-    </div>
-
-    <div class="camera-help-text">
-      Camera access is required to scan tickets.
-    </div>
-
-
-    <details>
-
-      <summary>
-        How to allow camera access
-      </summary>
-
-
-      <div class="help-content">
-
-        <strong>Android / Chrome</strong>
-
-        <ol>
-          <li>
-            Tap <b>SCAN TICKET</b>.
-          </li>
-
-          <li>
-            When Chrome asks for camera
-            permission, tap <b>Allow</b>.
-          </li>
-
-          <li>
-            If camera access was previously
-            blocked, open Chrome →
-            Settings → Site settings →
-            Camera.
-          </li>
-
-          <li>
-            Make sure Camera is enabled.
-          </li>
-
-          <li>
-            Return here and reload this page.
-          </li>
-        </ol>
-
-
-        <strong>iPhone / Safari</strong>
-
-        <ol>
-          <li>
-            Tap <b>SCAN TICKET</b>.
-          </li>
-
-          <li>
-            Tap <b>Allow</b> when asked.
-          </li>
-
-          <li>
-            If blocked, open
-            Settings → Safari → Camera.
-          </li>
-        </ol>
-
+      <div class="camera-help-title">
+        📷 Camera permission
       </div>
 
-    </details>
+      <div class="camera-help-text">
+        Camera access is required to scan tickets.
+      </div>
+
+      <details>
+        <summary>
+          How to allow camera access
+        </summary>
+
+        <div class="help-content">
+
+          <strong>Android / Chrome</strong>
+
+          <ol>
+            <li>
+              Tap <b>SCAN TICKET</b>.
+            </li>
+
+            <li>
+              If Chrome asks for camera permission,
+              tap <b>Allow</b>.
+            </li>
+
+            <li>
+              If no permission prompt appears,
+              tap the site/settings icon beside the
+              website address.
+            </li>
+
+            <li>
+              Open <b>Permissions → Camera</b>
+              and select <b>Allow</b>.
+            </li>
+
+            <li>
+              Return to this page and tap
+              <b>SCAN TICKET</b> again.
+            </li>
+          </ol>
+
+
+          <strong>iPhone / Safari</strong>
+
+          <ol>
+            <li>
+              Tap <b>SCAN TICKET</b>.
+            </li>
+
+            <li>
+              Tap <b>Allow</b> when Safari asks.
+            </li>
+
+            <li>
+              If access was blocked, open
+              <b>Settings → Safari → Camera</b>
+              and allow camera access.
+            </li>
+          </ol>
+
+        </div>
+      </details>
+
+    </div>
+
+
+    <button class="secondary"
+            onclick="unregisterScanner()">
+      Unregister this scanner
+    </button>
 
   </div>
 
 
-  <button class="secondary"
-          onclick="unregisterScanner()">
+  <!-- CAMERA -->
+  <div id="camera" class="card hidden">
 
-    Unregister this browser
+    <h1>Scan Ticket</h1>
 
-  </button>
+    <div class="sub">
+      Point the camera at the QR code printed on
+      the ticket.
+    </div>
 
-</div>
+    <div id="reader"></div>
 
+    <div id="cameraStatus"
+         class="camera-status">
+      Starting camera...
+    </div>
 
-<!-- =========================================
-     CAMERA
-========================================= -->
+    <button class="secondary"
+            onclick="stopCamera()">
+      CANCEL
+    </button>
 
-<div id="camera"
-     class="card hidden">
-
-  <h1>
-    Scan Ticket
-  </h1>
-
-  <div class="sub">
-    Point the camera at the QR code.
   </div>
 
 
-  <div id="reader"></div>
+  <!-- RESULT -->
+  <div id="result"
+       class="card result hidden">
 
+    <div id="resultTitle"
+         class="result-title">
+    </div>
 
-  <button class="secondary"
-          onclick="stopCamera()">
+    <div id="resultTicket"
+         class="ticket-id">
+    </div>
 
-    CANCEL
+    <div id="resultEntry"
+         class="entry">
+    </div>
 
-  </button>
+    <div id="resultMessage"
+         class="message">
+    </div>
 
-</div>
+    <button class="primary"
+            onclick="nextTicket()">
+      SCAN NEXT TICKET
+    </button>
 
-
-<!-- =========================================
-     RESULT
-========================================= -->
-
-<div id="result"
-     class="card result hidden">
-
-  <div id="resultTitle"
-       class="result-title">
-  </div>
-
-  <div id="resultTicket"
-       class="ticket-id">
-  </div>
-
-  <div id="resultEntry"
-       class="entry">
-  </div>
-
-  <div id="resultMessage"
-       class="message">
   </div>
 
 
-  <button class="primary"
-          onclick="nextTicket()">
+  <!-- SYSTEM ERROR -->
+  <div id="systemError"
+       class="card error-card hidden">
 
-    SCAN NEXT TICKET
+    <div class="error-icon">⚠️</div>
 
-  </button>
+    <h2>System error</h2>
 
-</div>
+    <p id="systemErrorMessage">
+      Please try again.
+    </p>
 
+    <button class="primary"
+            onclick="retryCurrentOperation()">
+      TRY AGAIN
+    </button>
+
+  </div>
 
 </div>
 
@@ -1081,7 +818,18 @@ label {
 
 /* =========================================================
    CONFIGURATION
-========================================================= */
+   ========================================================= */
+
+/*
+ * KEEP THIS URL PERMANENT.
+ *
+ * When Apps Script code changes:
+ * Deploy → Manage deployments
+ * → Edit existing deployment
+ * → New version → Deploy
+ *
+ * Do NOT create a new deployment.
+ */
 
 const BACKEND_URL =
   'https://script.google.com/macros/s/AKfycbyTVy6vn2zxI8Aeqm5uLGmdf5wY34Js-I_Zpfa1XxgZaluVDXgExmHk6evCM798Ap-w/exec';
@@ -1090,45 +838,18 @@ const BACKEND_URL =
 const DEVICE_KEY =
   'thalappavu_device_id';
 
-
 const TOKEN_KEY =
   'thalappavu_device_token';
 
 
 let scanner = null;
-
 let scanning = false;
-
-/* =========================================================
-   TOGGLE REG CODE
-========================================================= */
-
-
-function toggleRegistrationCode() {
-
-  const input =
-    document.getElementById(
-      'registrationCode'
-    );
-
-  if (
-    input.type === 'password'
-  ) {
-
-    input.type = 'text';
-
-  } else {
-
-    input.type = 'password';
-
-  }
-
-}
+let currentOperation = null;
 
 
 /* =========================================================
    UI
-========================================================= */
+   ========================================================= */
 
 function show(id) {
 
@@ -1137,7 +858,8 @@ function show(id) {
     'registration',
     'scanner',
     'camera',
-    'result'
+    'result',
+    'systemError'
   ].forEach(function(item) {
 
     document
@@ -1146,40 +868,40 @@ function show(id) {
 
   });
 
-
   document
     .getElementById(id)
     .classList.remove('hidden');
+}
 
+
+function setLoading(text) {
+  document.getElementById('loadingText')
+    .textContent = text || 'Loading...';
+
+  show('loading');
 }
 
 
 /* =========================================================
    START
-========================================================= */
+   ========================================================= */
 
 function start() {
 
   const deviceId =
-    localStorage.getItem(
-      DEVICE_KEY
-    );
-
+    localStorage.getItem(DEVICE_KEY);
 
   const token =
-    localStorage.getItem(
-      TOKEN_KEY
-    );
-
+    localStorage.getItem(TOKEN_KEY);
 
   if (!deviceId || !token) {
-
     show('registration');
-
     return;
-
   }
 
+  currentOperation = 'checkDevice';
+
+  setLoading('Checking scanner...');
 
   apiGet(
     'checkDevice',
@@ -1187,159 +909,256 @@ function start() {
       deviceId: deviceId,
       token: token
     },
-
     function(result) {
 
-      if (result.authorized) {
+      if (result && result.authorized) {
 
         document
-          .getElementById(
-            'deviceInfo'
-          )
+          .getElementById('deviceInfo')
           .textContent =
             result.deviceName +
             ' • ' +
             result.deviceId;
 
-
         show('scanner');
-
+        return;
       }
 
-      else {
+      localStorage.removeItem(DEVICE_KEY);
+      localStorage.removeItem(TOKEN_KEY);
 
-        localStorage.removeItem(
-          DEVICE_KEY
-        );
+      show('registration');
 
-        localStorage.removeItem(
-          TOKEN_KEY
-        );
-
-
-        show('registration');
-
-
-        document
-          .getElementById(
-            'registrationError'
-          )
-          .textContent =
-            result.message ||
-            'Scanner authorization failed.';
-
-      }
-
+      showRegistrationError(
+        result && result.message
+          ? result.message
+          : 'Scanner authorization failed.'
+      );
     }
-
   );
-
 }
 
 
 /* =========================================================
-   REGISTER
-========================================================= */
+   REGISTRATION
+   ========================================================= */
+
+function toggleRegistrationCode() {
+
+  const input =
+    document.getElementById(
+      'registrationCode'
+    );
+
+  input.type =
+    input.type === 'password'
+      ? 'text'
+      : 'password';
+}
+
+
+function showRegistrationError(message) {
+
+  const box =
+    document.getElementById(
+      'registrationError'
+    );
+
+  box.textContent = message || '';
+  box.classList.toggle(
+    'visible',
+    Boolean(message)
+  );
+}
+
 
 function registerScanner() {
 
   const name =
-    document
-      .getElementById(
-        'deviceName'
-      )
-      .value
-      .trim();
-
+    document.getElementById(
+      'deviceName'
+    ).value.trim();
 
   const code =
-    document
-      .getElementById(
-        'registrationCode'
-      )
-      .value
-      .trim();
+    document.getElementById(
+      'registrationCode'
+    ).value.trim();
 
+  showRegistrationError('');
 
   if (!name || !code) {
 
-    document
-      .getElementById(
-        'registrationError'
-      )
-      .textContent =
-        'Enter scanner name and registration code.';
+    showRegistrationError(
+      'Enter both the scanner name and registration code.'
+    );
 
     return;
-
   }
 
+  const button =
+    document.getElementById(
+      'registerButton'
+    );
 
-  const requestId =
-    createRequestId();
+  button.disabled = true;
+  button.innerHTML =
+    '<span>REGISTERING...</span>';
 
+  currentOperation = 'registerDevice';
 
-  show('loading');
+  apiGet(
+    'registerDevice',
+    {
+      deviceName: name,
+      registrationCode: code
+    },
+    function(result) {
+
+      button.disabled = false;
+      button.innerHTML =
+        '<span>REGISTER THIS SCANNER</span><span>→</span>';
+
+      if (!result || !result.success) {
+
+        showRegistrationError(
+          result && result.message
+            ? result.message
+            : 'Registration failed. Please try again.'
+        );
+
+        return;
+      }
+
+      /*
+       * Store the private scanner credentials locally.
+       * They are never displayed after registration.
+       */
+
+      localStorage.setItem(
+        DEVICE_KEY,
+        result.deviceId
+      );
+
+      localStorage.setItem(
+        TOKEN_KEY,
+        result.token
+      );
+
+      document
+        .getElementById('deviceInfo')
+        .textContent =
+          result.deviceName +
+          ' • ' +
+          result.deviceId;
+
+      show('scanner');
+    }
+  );
 }
 
 
 /* =========================================================
    CAMERA
-========================================================= */
+   ========================================================= */
 
 async function startCamera() {
 
+  if (scanning) {
+    return;
+  }
+
   show('camera');
 
+  document
+    .getElementById('reader')
+    .innerHTML = '';
+
+  document
+    .getElementById('cameraStatus')
+    .textContent =
+      'Requesting camera access...';
 
   try {
 
     /*
-     * Explicitly request camera permission.
-     * This is now running on the standalone
-     * GitHub Pages site, not an Apps Script iframe.
+     * Explicit permission request.
+     *
+     * Because this page is hosted on GitHub Pages,
+     * camera permission belongs to the GitHub Pages
+     * website, not script.google.com.
      */
 
-    const stream =
-      await navigator.mediaDevices
-        .getUserMedia({
-          video: {
-            facingMode: {
-              ideal: 'environment'
-            }
-          }
-        });
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
+      throw new Error(
+        'Camera access is not supported by this browser.'
+      );
+    }
 
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: {
+            ideal: 'environment'
+          }
+        },
+        audio: false
+      });
 
     stream
       .getTracks()
-      .forEach(
-        track => track.stop()
-      );
+      .forEach(function(track) {
+        track.stop();
+      });
+
+
+    document
+      .getElementById('cameraStatus')
+      .textContent =
+        'Point the camera at the QR code.';
 
 
     scanner =
-      new Html5Qrcode(
-        'reader'
-      );
-
+      new Html5Qrcode('reader');
 
     scanning = true;
-
 
     await scanner.start(
 
       {
-        facingMode: 'environment'
+        facingMode: {
+          ideal: 'environment'
+        }
       },
 
       {
         fps: 10,
 
-        qrbox: {
-          width: 260,
-          height: 260
-        }
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+          const size =
+            Math.min(
+              280,
+              Math.floor(
+                Math.min(
+                  viewfinderWidth,
+                  viewfinderHeight
+                ) * 0.72
+              )
+            );
+
+          return {
+            width: size,
+            height: size
+          };
+        },
+
+        aspectRatio: 1.0
       },
 
       function(decodedText) {
@@ -1348,139 +1167,103 @@ async function startCamera() {
           return;
         }
 
-
         scanning = false;
 
-
-        scanner
-          .stop()
-          .then(function() {
-
-            scanner.clear();
-
-            validateTicket(
-              decodedText
-            );
-
-          });
-
+        validateTicket(decodedText);
       },
 
       function() {
-
-        /* QR not found yet — ignore */
-
+        /* QR not detected yet. */
       }
-
     );
-
 
   } catch (error) {
 
-    showCameraError(
-      error
-    );
-
+    showCameraError(error);
   }
-
 }
 
 
 /* =========================================================
    CAMERA ERROR
-========================================================= */
+   ========================================================= */
 
 function showCameraError(error) {
 
-  show('camera');
+  scanning = false;
 
+  let message =
+    'The scanner could not access the camera.';
+
+  if (
+    error &&
+    (
+      error.name === 'NotAllowedError' ||
+      error.name === 'PermissionDeniedError'
+    )
+  ) {
+
+    message =
+      'Camera access was denied. Open the site settings for this website, allow Camera, then return and try again.';
+
+  } else if (
+    error &&
+    error.name === 'NotFoundError'
+  ) {
+
+    message =
+      'No camera was found on this device.';
+
+  } else if (
+    error &&
+    error.name === 'NotReadableError'
+  ) {
+
+    message =
+      'The camera is being used by another application. Close that application and try again.';
+
+  } else if (
+    error &&
+    error.message
+  ) {
+
+    message = error.message;
+  }
 
   document
-    .getElementById(
-      'reader'
-    )
-    .innerHTML = `
-
-      <div style="
-        padding:25px;
-        text-align:center;
-        background:#fff4f4;
-        border-radius:15px;
-        border:1px solid #f5c2c2;
-      ">
-
-        <div style="
-          font-size:42px;
-        ">
-          ⚠️
-        </div>
-
-        <h2>
-          Camera Unavailable
-        </h2>
-
-        <p style="
-          color:#666;
-          line-height:1.5;
-        ">
-          The scanner could not access
-          your camera.
-        </p>
-
-        <p style="
-          color:#666;
-          line-height:1.5;
-        ">
-          Please check your browser's
-          camera permission and try again.
-        </p>
-
-        <button
-          class="primary"
-          onclick="startCamera()">
-
-          TRY CAMERA AGAIN
-
-        </button>
-
-      </div>
-  `;
-
+    .getElementById('cameraStatus')
+    .textContent = message;
 }
 
 
 /* =========================================================
    STOP CAMERA
-========================================================= */
+   ========================================================= */
 
 async function stopCamera() {
 
   scanning = false;
 
-
   if (scanner) {
 
     try {
-
       await scanner.stop();
+    } catch (e) {}
 
+    try {
       scanner.clear();
-
     } catch (e) {}
 
     scanner = null;
-
   }
 
-
   show('scanner');
-
 }
 
 
 /* =========================================================
    VALIDATE TICKET
-========================================================= */
+   ========================================================= */
 
 function validateTicket(ticketId) {
 
@@ -1489,55 +1272,62 @@ function validateTicket(ticketId) {
       .trim()
       .toUpperCase();
 
+  if (!ticketId) {
+    showSystemError(
+      'The QR code did not contain a ticket ID.'
+    );
+    return;
+  }
 
   const deviceId =
-    localStorage.getItem(
-      DEVICE_KEY
-    );
-
+    localStorage.getItem(DEVICE_KEY);
 
   const token =
-    localStorage.getItem(
-      TOKEN_KEY
+    localStorage.getItem(TOKEN_KEY);
+
+  if (!deviceId || !token) {
+
+    showSystemError(
+      'This scanner is no longer registered.'
     );
 
+    return;
+  }
 
-  show('loading');
+  currentOperation = 'validateTicket';
 
+  setLoading('Checking ticket...');
 
   apiGet(
     'validateTicket',
-
     {
       deviceId: deviceId,
       token: token,
       ticketId: ticketId
     },
-
     function(result) {
 
+      if (!result) {
+        showSystemError(
+          'The server returned no response.'
+        );
+        return;
+      }
+
       displayResult(result);
-
     }
-
   );
-
 }
+
 
 /* =========================================================
    DISPLAY RESULT
-========================================================= */
+   ========================================================= */
 
-function displayResult(
-  result
-) {
+function displayResult(result) {
 
   const card =
-    document
-      .getElementById(
-        'result'
-      );
-
+    document.getElementById('result');
 
   card.classList.remove(
     'valid',
@@ -1545,178 +1335,150 @@ function displayResult(
     'warning'
   );
 
+  let title = '';
+  let entry = '';
 
-  let title;
-  let entry;
+  switch (result.type) {
+
+    case 'VALID':
+
+      card.classList.add('valid');
+
+      title = '✓ VALID TICKET';
+      entry = 'ENTRY ALLOWED';
+
+      break;
 
 
-  if (
-    result.type ===
-    'VALID'
-  ) {
+    case 'USED':
 
-    card.classList.add(
-      'valid'
-    );
+      card.classList.add('invalid');
 
-    title =
-      '✓ VALID TICKET';
+      title = '✕ ALREADY USED';
+      entry = 'ENTRY DENIED';
 
-    entry =
-      'ENTRY ALLOWED';
+      break;
 
-  }
 
-  else if (
-    result.type ===
-    'USED'
-  ) {
+    case 'INVALID':
 
-    card.classList.add(
-      'invalid'
-    );
+      card.classList.add('invalid');
 
-    title =
-      '✕ ALREADY USED';
+      title = '✕ INVALID TICKET';
+      entry = 'ENTRY DENIED';
 
-    entry =
-      'ENTRY DENIED';
+      break;
 
-  }
 
-  else if (
-    result.type ===
-    'INVALID'
-  ) {
+    case 'UNAUTHORIZED':
 
-    card.classList.add(
-      'invalid'
-    );
+      card.classList.add('invalid');
 
-    title =
-      '✕ INVALID TICKET';
+      title = '🔒 SCANNER NOT AUTHORIZED';
+      entry = 'ACCESS DENIED';
 
-    entry =
-      'ENTRY DENIED';
+      break;
 
-  }
 
-  else if (
-    result.type ===
-    'UNAUTHORIZED'
-  ) {
+    default:
 
-    card.classList.add(
-      'invalid'
-    );
+      card.classList.add('warning');
 
-    title =
-      '🔒 SCANNER NOT AUTHORIZED';
-
-    entry =
-      'ACCESS DENIED';
-
-  }
-
-  else {
-
-    card.classList.add(
-      'warning'
-    );
-
-    title =
-      '⚠ SYSTEM ERROR';
-
-    entry =
-      'PLEASE TRY AGAIN';
-
+      title = '⚠ SYSTEM ERROR';
+      entry = 'PLEASE TRY AGAIN';
   }
 
 
   document
-    .getElementById(
-      'resultTitle'
-    )
-    .textContent =
-      title;
-
+    .getElementById('resultTitle')
+    .textContent = title;
 
   document
-    .getElementById(
-      'resultTicket'
-    )
+    .getElementById('resultTicket')
     .textContent =
-      result.ticketId ||
-      '';
-
+      result.ticketId || '';
 
   document
-    .getElementById(
-      'resultEntry'
-    )
-    .textContent =
-      entry;
-
+    .getElementById('resultEntry')
+    .textContent = entry;
 
   document
-    .getElementById(
-      'resultMessage'
-    )
+    .getElementById('resultMessage')
     .textContent =
-      result.message ||
-      '';
-
+      result.message || '';
 
   show('result');
-
 }
 
 
 /* =========================================================
-   NEXT
-========================================================= */
+   NEXT TICKET
+   ========================================================= */
 
 function nextTicket() {
 
-  show('scanner');
+  currentOperation = null;
 
+  show('scanner');
 }
 
 
 /* =========================================================
    UNREGISTER
-========================================================= */
+   ========================================================= */
 
 function unregisterScanner() {
 
-  if (
-    !confirm(
-      'Unregister this scanner?'
-    )
-  ) {
+  const confirmed =
+    window.confirm(
+      'Unregister this scanner from this browser?'
+    );
 
+  if (!confirmed) {
     return;
-
   }
 
-
-  localStorage.removeItem(
-    DEVICE_KEY
-  );
-
-
-  localStorage.removeItem(
-    TOKEN_KEY
-  );
-
+  localStorage.removeItem(DEVICE_KEY);
+  localStorage.removeItem(TOKEN_KEY);
 
   location.reload();
-
 }
 
+
 /* =========================================================
-   JSONP GET
-========================================================= */
+   SYSTEM ERROR
+   ========================================================= */
+
+function showSystemError(message) {
+
+  document
+    .getElementById('systemErrorMessage')
+    .textContent =
+      message || 'Please try again.';
+
+  show('systemError');
+}
+
+
+function retryCurrentOperation() {
+
+  if (currentOperation === 'checkDevice') {
+    start();
+    return;
+  }
+
+  if (currentOperation === 'validateTicket') {
+    show('scanner');
+    return;
+  }
+
+  show('scanner');
+}
+
+
+/* =========================================================
+   JSONP API CLIENT
+   ========================================================= */
 
 function apiGet(
   action,
@@ -1733,32 +1495,47 @@ function apiGet(
       .substring(2);
 
 
+  let finished = false;
+
+  const script =
+    document.createElement('script');
+
+
+  function finish(result) {
+
+    if (finished) {
+      return;
+    }
+
+    finished = true;
+
+    clearTimeout(timeout);
+
+    delete window[callbackName];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    onComplete(
+      result
+    );
+  }
+
+
   window[callbackName] =
     function(result) {
-
-      delete window[
-        callbackName
-      ];
-
-      script.remove();
-
-
-      onComplete(
-        result
-      );
-
+      finish(result);
     };
 
 
   const query =
     new URLSearchParams();
 
-
   query.set(
     'action',
     action
   );
-
 
   query.set(
     'callback',
@@ -1766,21 +1543,15 @@ function apiGet(
   );
 
 
-  Object.keys(params)
+  Object.keys(params || {})
     .forEach(function(key) {
 
       query.set(
         key,
-        params[key]
+        String(params[key])
       );
 
     });
-
-
-  const script =
-    document.createElement(
-      'script'
-    );
 
 
   script.src =
@@ -1792,55 +1563,45 @@ function apiGet(
   script.onerror =
     function() {
 
-      delete window[
-        callbackName
-      ];
-
-      script.remove();
-
-
-      onComplete({
-
-        authorized: false,
-
+      finish({
+        success: false,
+        type: 'ERROR',
         message:
-          'Unable to contact server.'
-
+          'Unable to contact the ticket server.'
       });
 
     };
 
 
-  document.body.appendChild(
-    script
-  );
+  /*
+   * Prevent infinite loading if Apps Script
+   * never responds.
+   */
 
-}
+  const timeout =
+    setTimeout(function() {
+
+      finish({
+        success: false,
+        type: 'ERROR',
+        message:
+          'The ticket server did not respond. Check your internet connection and try again.'
+      });
+
+    }, 15000);
 
 
-/* =========================================================
-   REQUEST ID
-========================================================= */
-
-function createRequestId() {
-
-  return (
-    Date.now().toString(36) +
-    '-' +
-    crypto.randomUUID()
-  );
-
+  document.body.appendChild(script);
 }
 
 
 /* =========================================================
    START
-========================================================= */
+   ========================================================= */
 
 start();
 
 </script>
 
 </body>
-
 </html>

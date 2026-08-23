@@ -893,9 +893,7 @@ async function stopCamera() {
    VALIDATE TICKET
 ========================================================= */
 
-function validateTicket(
-  ticketId
-) {
+function validateTicket(ticketId) {
 
   ticketId =
     String(ticketId || '')
@@ -915,49 +913,27 @@ function validateTicket(
     );
 
 
-  const requestId =
-    createRequestId();
-
-
   show('loading');
 
 
-  postToBackend({
+  apiGet(
+    'validateTicket',
 
-    action:
-      'validateTicket',
-
-    requestId:
-      requestId,
-
-    deviceId:
-      deviceId,
-
-    token:
-      token,
-
-    ticketId:
-      ticketId
-
-  });
-
-
-  pollResult(
-
-    requestId,
+    {
+      deviceId: deviceId,
+      token: token,
+      ticketId: ticketId
+    },
 
     function(result) {
 
-      displayResult(
-        result
-      );
+      displayResult(result);
 
     }
 
   );
 
 }
-
 
 /* =========================================================
    DISPLAY RESULT
@@ -1148,259 +1124,6 @@ function unregisterScanner() {
   location.reload();
 
 }
-
-
-/* =========================================================
-   POST TO APPS SCRIPT
-========================================================= */
-
-function postToBackend(
-  data
-) {
-
-  /*
-   * Cross-origin HTML form POST.
-   * We intentionally don't read the response.
-   * Result is retrieved through the read-only
-   * JSONP polling endpoint.
-   */
-
-  const iframe =
-    document.createElement(
-      'iframe'
-    );
-
-
-  iframe.name =
-    'api_' +
-    Date.now();
-
-
-  iframe.style.display =
-    'none';
-
-
-  document.body.appendChild(
-    iframe
-  );
-
-
-  const form =
-    document.createElement(
-      'form'
-    );
-
-
-  form.method =
-    'POST';
-
-
-  form.action =
-    BACKEND_URL;
-
-
-  form.target =
-    iframe.name;
-
-
-  Object.keys(data)
-    .forEach(function(key) {
-
-      const input =
-        document.createElement(
-          'input'
-        );
-
-
-      input.type =
-        'hidden';
-
-
-      input.name =
-        key;
-
-
-      input.value =
-        data[key];
-
-
-      form.appendChild(
-        input
-      );
-
-    });
-
-
-  document.body.appendChild(
-    form
-  );
-
-
-  form.submit();
-
-
-  setTimeout(
-    function() {
-
-      form.remove();
-
-      iframe.remove();
-
-    },
-    10000
-  );
-
-}
-
-
-/* =========================================================
-   READ-ONLY JSONP POLLING
-========================================================= */
-
-function pollResult(
-  requestId,
-  onComplete
-) {
-
-  let attempts = 0;
-
-  const maxAttempts = 30;
-
-
-  function check() {
-
-    attempts++;
-
-
-    const callbackName =
-      'resultCallback_' +
-      Date.now() +
-      '_' +
-      Math.random()
-        .toString(36)
-        .substring(2);
-
-
-    window[callbackName] =
-      function(response) {
-
-        cleanup();
-
-
-        if (
-          response.pending &&
-          attempts < maxAttempts
-        ) {
-
-          setTimeout(
-            check,
-            500
-          );
-
-          return;
-
-        }
-
-
-        if (
-          response.pending
-        ) {
-
-          onComplete({
-
-            type: 'ERROR',
-
-            message:
-              'Server did not respond. Please try again.'
-
-          });
-
-          return;
-
-        }
-
-
-        onComplete(
-          response.result
-        );
-
-      };
-
-
-    const script =
-      document.createElement(
-        'script'
-      );
-
-
-    script.src =
-      BACKEND_URL +
-      '?action=getResult' +
-      '&requestId=' +
-      encodeURIComponent(
-        requestId
-      ) +
-      '&callback=' +
-      encodeURIComponent(
-        callbackName
-      );
-
-
-    script.onerror =
-      function() {
-
-        cleanup();
-
-
-        if (
-          attempts < maxAttempts
-        ) {
-
-          setTimeout(
-            check,
-            700
-          );
-
-        }
-
-        else {
-
-          onComplete({
-
-            type: 'ERROR',
-
-            message:
-              'Unable to contact server.'
-
-          });
-
-        }
-
-      };
-
-
-    document.body.appendChild(
-      script
-    );
-
-
-    function cleanup() {
-
-      delete window[
-        callbackName
-      ];
-
-      script.remove();
-
-    }
-
-  }
-
-
-  check();
-
-}
-
 
 /* =========================================================
    JSONP GET

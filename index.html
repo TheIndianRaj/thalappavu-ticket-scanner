@@ -1076,49 +1076,24 @@ async function startCamera() {
   document
     .getElementById('cameraStatus')
     .textContent =
-      'Requesting camera access...';
+      'Starting camera...';
+
+  /*
+   * IMPORTANT:
+   *
+   * Do NOT call navigator.mediaDevices.getUserMedia()
+   * here before Html5Qrcode.
+   *
+   * That would acquire the camera once and then release it,
+   * after which Html5Qrcode tries to acquire it again.
+   *
+   * On some Android/Chrome combinations this second request
+   * can fail even though Camera permission is already allowed.
+   *
+   * Html5Qrcode handles the camera request itself.
+   */
 
   try {
-
-    /*
-     * Explicit permission request.
-     *
-     * Because this page is hosted on GitHub Pages,
-     * camera permission belongs to the GitHub Pages
-     * website, not script.google.com.
-     */
-
-    if (
-      !navigator.mediaDevices ||
-      !navigator.mediaDevices.getUserMedia
-    ) {
-      throw new Error(
-        'Camera access is not supported by this browser.'
-      );
-    }
-
-    const stream =
-      await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: {
-            ideal: 'environment'
-          }
-        },
-        audio: false
-      });
-
-    stream
-      .getTracks()
-      .forEach(function(track) {
-        track.stop();
-      });
-
-
-    document
-      .getElementById('cameraStatus')
-      .textContent =
-        'Point the camera at the QR code.';
-
 
     scanner =
       new Html5Qrcode('reader');
@@ -1173,14 +1148,130 @@ async function startCamera() {
       },
 
       function() {
-        /* QR not detected yet. */
+        /*
+         * QR not detected yet.
+         * This callback is intentionally silent.
+         */
       }
     );
 
+    document
+      .getElementById('cameraStatus')
+      .textContent =
+        'Point the camera at the QR code.';
+
   } catch (error) {
 
-    showCameraError(error);
+    scanning = false;
+
+    /*
+     * Clean up a partially-created scanner.
+     */
+    if (scanner) {
+
+      try {
+        await scanner.clear();
+      } catch (e) {}
+
+      scanner = null;
+    }
+
+    let message =
+      'Unable to access the camera.';
+
+    /*
+     * Different browsers/libraries may expose the
+     * underlying camera problem in different ways.
+     */
+
+    const errorName =
+      error && error.name
+        ? String(error.name)
+        : '';
+
+    const errorText =
+      error && error.message
+        ? String(error.message)
+        : String(error || '');
+
+    const combined =
+      (errorName + ' ' + errorText)
+        .toLowerCase();
+
+
+    if (
+      errorName === 'NotAllowedError' ||
+      errorName === 'PermissionDeniedError' ||
+      combined.includes('permission denied') ||
+      combined.includes('notallowederror')
+    ) {
+
+      message =
+        'Camera permission is blocked for this website. Open the site settings for the website, set Camera to Allow, then reload this page.';
+
+    } else if (
+      errorName === 'NotFoundError' ||
+      combined.includes('no camera')
+    ) {
+
+      message =
+        'No camera was found on this device.';
+
+    } else if (
+      errorName === 'NotReadableError' ||
+      combined.includes('could not start video source') ||
+      combined.includes('could not start camera') ||
+      combined.includes('camera is already in use')
+    ) {
+
+      message =
+        'The camera is already being used by another app or browser tab. Close any other app or tab using the camera, then try again.';
+
+    } else if (
+      errorName === 'OverconstrainedError'
+    ) {
+
+      message =
+        'The requested camera configuration is not available. We will try the device camera again.';
+
+    } else if (
+      combined.includes('secure context')
+    ) {
+
+      message =
+        'The browser did not consider this page secure enough to use the camera. Open the scanner using the HTTPS GitHub Pages address.';
+
+    } else if (errorText) {
+
+      /*
+       * Show the actual error instead of hiding it behind
+       * a generic "camera could not be accessed" message.
+       */
+      message =
+        'Camera error: ' + errorText;
+    }
+
+
+    document
+      .getElementById('cameraStatus')
+      .innerHTML =
+        '<b>Camera could not be started</b><br><br>' +
+        escapeHtml(message);
   }
+}
+
+
+/*
+ * Safely display browser/library error text.
+ */
+function escapeHtml(value) {
+
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 
@@ -1204,7 +1295,7 @@ function showCameraError(error) {
   ) {
 
     message =
-      'Camera access was denied. Open the site settings for this website, allow Camera, then return and try again.';
+      'Camera permission is blocked for this website. Open the site settings, set Camera to Allow, then reload the page.';
 
   } else if (
     error &&
@@ -1220,19 +1311,22 @@ function showCameraError(error) {
   ) {
 
     message =
-      'The camera is being used by another application. Close that application and try again.';
+      'The camera is already being used by another app or browser tab. Close it and try again.';
 
   } else if (
     error &&
     error.message
   ) {
 
-    message = error.message;
+    message =
+      'Camera error: ' + error.message;
   }
 
   document
     .getElementById('cameraStatus')
-    .textContent = message;
+    .innerHTML =
+      '<b>Camera could not be started</b><br><br>' +
+      escapeHtml(message);
 }
 
 

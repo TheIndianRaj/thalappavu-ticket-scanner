@@ -935,9 +935,9 @@ function showRegistration() {
 
 
           <p class="subtitle">
-            Register this phone once.
-            It can then be used to validate
-            tickets at the event entrance.
+            Enter the name of the person who will
+            be scanning tickets. This phone can
+            then be used to validate tickets.
           </p>
 
 
@@ -949,7 +949,7 @@ function showRegistration() {
                 class="label"
                 for="scannerName">
 
-                Scanner name
+                Your name
 
               </label>
 
@@ -958,7 +958,7 @@ function showRegistration() {
                 name="scannerName"
                 class="input"
                 type="text"
-                placeholder="Main Gate 1"
+                placeholder="Enter your name"
                 autocomplete="off"
                 autocapitalize="words"
                 spellcheck="false"
@@ -1102,9 +1102,9 @@ async function registerScanner() {
     showMessage(
       message,
       !name && !code
-        ? "Please enter the scanner name and registration code."
+        ? "Please enter your name and registration code."
         : !name
-          ? "Please enter a scanner name."
+          ? "Please enter your name."
           : "Please enter the registration code.",
       true
     );

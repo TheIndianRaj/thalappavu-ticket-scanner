@@ -819,7 +819,10 @@ const STORAGE = {
     "ticket_scanner_id",
 
   scannerName:
-    "ticket_scanner_name"
+    "ticket_scanner_name",
+
+  token:
+    "ticket_scanner_token"
 
 };
 
@@ -858,15 +861,37 @@ function initialize() {
       STORAGE.scannerId
     );
 
+  const token =
+    localStorage.getItem(
+      STORAGE.token
+    );
+
 
   if (
     registered === "true" &&
-    scannerId
+    scannerId &&
+    token
   ) {
 
     showReady();
 
   } else {
+
+    localStorage.removeItem(
+      STORAGE.registered
+    );
+
+    localStorage.removeItem(
+      STORAGE.scannerId
+    );
+
+    localStorage.removeItem(
+      STORAGE.scannerName
+    );
+
+    localStorage.removeItem(
+      STORAGE.token
+    );
 
     showRegistration();
 
@@ -1171,11 +1196,22 @@ async function registerScanner() {
         result.deviceId ||
         result.id;
 
+      const token =
+        result.token;
+
 
       if (!scannerId) {
 
         throw new Error(
           "The server accepted the registration but did not return a scanner ID."
+        );
+
+      }
+
+      if (!token) {
+
+        throw new Error(
+          "The server accepted the registration but did not return an authentication token."
         );
 
       }
@@ -1194,6 +1230,11 @@ async function registerScanner() {
       localStorage.setItem(
         STORAGE.scannerName,
         name
+      );
+
+      localStorage.setItem(
+        STORAGE.token,
+        String(token)
       );
 
 
@@ -1594,6 +1635,30 @@ async function validateTicket(
   ticketId
 ) {
 
+  const deviceId =
+    localStorage.getItem(
+      STORAGE.scannerId
+    );
+
+  const token =
+    localStorage.getItem(
+      STORAGE.token
+    );
+
+
+  if (!deviceId || !token) {
+
+    validationInProgress = false;
+
+    showError(
+      "This scanner is not registered on this phone. Please register the phone again."
+    );
+
+    return;
+
+  }
+
+
   showChecking();
 
 
@@ -1607,14 +1672,14 @@ async function validateTicket(
           ticketId:
             ticketId,
 
-          scannerId:
+          deviceId:
             localStorage.getItem(
               STORAGE.scannerId
             ),
 
-          scannerName:
+          token:
             localStorage.getItem(
-              STORAGE.scannerName
+              STORAGE.token
             )
 
         },
@@ -1640,14 +1705,14 @@ async function validateTicket(
             ticketId:
               ticketId,
 
-            scannerId:
+            deviceId:
               localStorage.getItem(
                 STORAGE.scannerId
               ),
 
-            scannerName:
+            token:
               localStorage.getItem(
-                STORAGE.scannerName
+                STORAGE.token
               )
 
           },
@@ -2471,6 +2536,10 @@ async function unregisterScanner() {
 
   localStorage.removeItem(
     STORAGE.scannerName
+  );
+
+  localStorage.removeItem(
+    STORAGE.token
   );
 
 

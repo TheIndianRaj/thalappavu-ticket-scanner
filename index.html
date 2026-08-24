@@ -1782,19 +1782,43 @@ function processValidation(
     ).toUpperCase();
 
 
-  const valid =
-    result.valid === true;
+  /*
+   * The Apps Script backend can identify a valid ticket in
+   * different ways depending on the deployed backend version.
+   *
+   * The current backend can return:
+   *   { success: true, message: "Entry allowed." }
+   *
+   * Older versions may return valid:true, type:"VALID",
+   * or status:"VALID"/"AVAILABLE"/"SUCCESS".
+   *
+   * IMPORTANT: success:true is a successful validation response.
+   * It must NOT fall through to the SYSTEM ERROR screen.
+   */
+  const success =
+    result.success === true ||
+    String(result.success).toLowerCase() === "true";
 
+  const valid =
+    result.valid === true ||
+    String(result.valid).toLowerCase() === "true";
+
+  const type =
+    String(result.type || "").toUpperCase();
 
   const used =
     result.alreadyUsed === true ||
     result.used === true ||
+    type === "USED" ||
+    type === "ALREADY_USED" ||
     status === "ALREADY_USED" ||
     status === "USED";
 
 
   if (
+    success ||
     valid ||
+    type === "VALID" ||
     status === "VALID" ||
     status === "AVAILABLE" ||
     status === "SUCCESS"
@@ -1802,14 +1826,15 @@ function processValidation(
 
     showValid(
       result.ticketId ||
+      result.ticket ||
       ticketId,
-      result.message
+      result.message ||
+      "Entry allowed."
     );
 
     return;
 
   }
-
 
   if (used) {
 
@@ -1872,7 +1897,7 @@ function showValid(
           </div>
 
           <div class="result-title">
-            VALID TICKET
+            ENTRY ALLOWED
           </div>
 
           <div class="ticket-id">
@@ -1880,7 +1905,7 @@ function showValid(
           </div>
 
           <div class="entry">
-            ENTRY ALLOWED
+            ✓ TICKET ACCEPTED
           </div>
 
           <p class="result-message">

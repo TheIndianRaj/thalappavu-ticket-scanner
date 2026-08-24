@@ -916,27 +916,6 @@ function showRegistration() {
           </p>
 
 
-          <div class="form-group">
-
-            <label
-              class="label"
-              for="scannerName">
-
-              Scanner name
-
-            </label>
-
-            <input
-              id="scannerName"
-              class="input"
-              type="text"
-              placeholder="Main Gate 1"
-              autocomplete="off"
-            >
-
-          </div>
-
-
           <form id="registrationForm" novalidate>
 
             <div class="form-group">
@@ -1029,6 +1008,13 @@ function showRegistration() {
     </div>
 
   `;
+
+  const scannerNameInput =
+    document.getElementById("scannerName");
+
+  if (scannerNameInput) {
+    scannerNameInput.focus();
+  }
 
   const registrationForm =
     document.getElementById("registrationForm");

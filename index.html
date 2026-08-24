@@ -13,7 +13,7 @@
              user-scalable=no"
   >
 
-  <meta name="theme-color" content="#087ff5">
+  <meta name="theme-color" content="#111827">
 
   <title>Event Ticket Scanner</title>
 
@@ -117,58 +117,57 @@
 
 
     /* =====================================================
-       BRAND
+       EVENT BRAND
        ===================================================== */
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
+    .event-brand {
       margin-bottom: 28px;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, #28344b 0%, #111827 58%, #080b12 100%);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 12px 30px rgba(15,23,42,.18);
     }
 
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-
-      border-radius: 14px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #087ff5,
-          #0066d6
-        );
-
-      color: white;
-
+    .event-brand-logo {
       display: flex;
       align-items: center;
       justify-content: center;
-
-      font-size: 25px;
-      font-weight: 700;
-
-      box-shadow:
-        0 6px 16px
-        rgba(
-          8,
-          127,
-          245,
-          0.25
-        );
+      padding: 16px 18px 10px;
+      min-height: 128px;
     }
 
-    .brand-text {
-      font-size: 16px;
-      font-weight: 700;
-
-      color: #687078;
-
-      letter-spacing: 0.4px;
+    .event-brand-logo img {
+      display: block;
+      width: min(100%, 360px);
+      height: auto;
+      max-height: 150px;
+      object-fit: contain;
     }
 
+    .event-brand-caption {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 16px 12px;
+      background: rgba(0,0,0,.20);
+      color: #f6c515;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .event-brand-caption::before,
+    .event-brand-caption::after {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: rgba(246,197,21,.55);
+    }
 
     /* =====================================================
        HEADINGS
@@ -294,22 +293,22 @@
       background:
         linear-gradient(
           135deg,
-          #087ff5,
-          #066fe0
+          #f6c515,
+          #d99f00
         );
 
-      color: white;
+      color: #111827;
 
       font-size: 20px;
       font-weight: 750;
 
       box-shadow:
-        0 7px 18px
+        0 8px 20px
         rgba(
-          8,
-          127,
-          245,
-          0.23
+          217,
+          159,
+          0,
+          0.28
         );
 
       transition:
@@ -746,8 +745,18 @@
         font-size: 18px;
       }
 
-      .brand {
+      .event-brand {
         margin-bottom: 22px;
+      }
+
+      .event-brand-logo {
+        min-height: 112px;
+        padding: 12px 14px 8px;
+      }
+
+      .event-brand-caption {
+        font-size: 10px;
+        letter-spacing: 1.1px;
       }
 
     }
@@ -780,7 +789,7 @@
 const CONFIG = {
 
   API_URL:
-    "https://script.google.com/macros/s/AKfycby4I4Uydm-z5nzSG892bOSnKdlwTaxbBP-jgkxRUgKDtulGg0V74SMKgmOcACkthWXR/exec",
+    "https://script.google.com/macros/s/AKfycbzznTrAiPNcTgeKVoPn5Tq1Ajf1hZ64RYRwRTuydHe33yo-x8XxTncGk3mBOMoEwgWs/exec",
 
   VALIDATION_TIMEOUT:
     15000,
@@ -901,6 +910,30 @@ function initialize() {
 
 
 /* ============================================================
+   EVENT BRAND
+   ============================================================ */
+
+function eventBrandMarkup() {
+
+  return `
+    <div class="event-brand">
+      <div class="event-brand-logo">
+        <img
+          src="event-logo.png"
+          alt="Thalappavu event logo"
+        >
+      </div>
+
+      <div class="event-brand-caption">
+        EVENT TICKET SYSTEM
+      </div>
+    </div>
+  `;
+
+}
+
+
+/* ============================================================
    REGISTRATION SCREEN
    ============================================================ */
 
@@ -916,17 +949,7 @@ function showRegistration() {
 
         <div class="card">
 
-          <div class="brand">
-
-            <div class="brand-icon">
-              ✓
-            </div>
-
-            <div class="brand-text">
-              EVENT TICKET SYSTEM
-            </div>
-
-          </div>
+          ${eventBrandMarkup()}
 
 
           <h1>
@@ -1307,6 +1330,8 @@ function showReady() {
       <div class="container">
 
         <div class="card">
+
+          ${eventBrandMarkup()}
 
           <div class="ready-status">
 
@@ -1892,6 +1917,8 @@ function showValid(
 
         <div class="card result valid">
 
+          ${eventBrandMarkup()}
+
           <div class="result-icon">
             ✓
           </div>
@@ -1963,6 +1990,8 @@ function showUsed(
       <div class="container">
 
         <div class="card result invalid">
+
+          ${eventBrandMarkup()}
 
           <div class="result-icon">
             ×
@@ -2036,6 +2065,8 @@ function showInvalid(
 
         <div class="card result invalid">
 
+          ${eventBrandMarkup()}
+
           <div class="result-icon">
             ×
           </div>
@@ -2106,6 +2137,8 @@ function showError(
       <div class="container">
 
         <div class="card result error">
+
+          ${eventBrandMarkup()}
 
           <div class="result-icon">
             !
@@ -2179,6 +2212,8 @@ function showCameraError(
       <div class="container">
 
         <div class="card result error">
+
+          ${eventBrandMarkup()}
 
           <div class="result-icon">
             !
@@ -2273,6 +2308,8 @@ function showChecking() {
 
         <div class="card loading-card">
 
+          ${eventBrandMarkup()}
+
           <div class="spinner"></div>
 
           <h2>
@@ -2307,6 +2344,8 @@ function renderScanner() {
       <div class="container">
 
         <div class="card">
+
+          ${eventBrandMarkup()}
 
           <h1>
             Scan Ticket
@@ -2859,6 +2898,8 @@ function showConfigError() {
       <div class="container">
 
         <div class="card result error">
+
+          ${eventBrandMarkup()}
 
           <div class="result-icon">
             !
